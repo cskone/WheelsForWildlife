@@ -60,7 +60,6 @@ namespace Wildlife.Models
 
     public class EditUserInfoViewModel
     {
-        [Required]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Old Email")]
         public string OldEmail { get; set; }
