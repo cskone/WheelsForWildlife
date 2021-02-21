@@ -58,6 +58,32 @@ namespace Wildlife.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class EditUserInfoViewModel
+    {
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Current Email")]
+        public string OldEmail { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "New Email")]
+        public string NewEmail { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Current UserName")]
+        public string OldUserName { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        [DataType(DataType.Text)]
+        [Display(Name = "New UserName")]
+        public string NewUserName { get; set; }
+
+    }
+
     public class AddPhoneNumberViewModel
     {
         [Required]

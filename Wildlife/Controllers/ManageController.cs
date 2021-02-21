@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,6 +16,18 @@ namespace Wildlife.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        public class UserUpdateViewModel
+        {
+            [Required]
+            [MaxLength(50)]
+            public string UserName { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [MaxLength(255)]
+            public string Email { get; set; }
+        }
 
         public ManageController()
         {
@@ -48,6 +61,39 @@ namespace Wildlife.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        //https://stackoverflow.com/questions/33984530/how-to-update-identitys-manage-controller
+
+        [HttpGet]
+        public async Task<ActionResult> Edit(ManageMessageId? message = null)
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            // move entity fields to viewmodel from constructor, automapper, etc.        
+            var model = new UserUpdateViewModel
+            {
+                UserName = user.UserName,
+                Email = user.Email
+            };
+            ViewBag.MessageId = message;
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(UserUpdateViewModel userUpdateViewModel)
+        {
+            if (!ModelState.IsValid) return View(userUpdateViewModel);
+
+            var user = await UserManager.FindByNameAsync(userUpdateViewModel.UserName);
+            // Mapper.Map(userUpdateViewModel, user);  // move viewmodel to entity model
+            // instead of automapper, you can do this:
+            user.UserName = userUpdateViewModel.UserName;
+            user.Email = userUpdateViewModel.Email;
+
+            await UserManager.UpdateAsync(user);
+
+            return RedirectToAction("Manage", new { Message = "Updated!" });
         }
 
         //
