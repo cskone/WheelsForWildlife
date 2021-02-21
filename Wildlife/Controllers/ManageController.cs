@@ -70,30 +70,48 @@ namespace Wildlife.Controllers
         {
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             // move entity fields to viewmodel from constructor, automapper, etc.        
-            var model = new UserUpdateViewModel
+            var model = new EditUserInfoViewModel
             {
-                UserName = user.UserName,
-                Email = user.Email
+                OldUserName = user.UserName,
+                OldEmail = user.Email,
+                OldPhoneNumber = user.PhoneNumber,
+                OldVehicleMake = user.VehicleMake,
+                OldVehicleModel = user.VehicleModel,
+                OldDriverLocation = user.DriverLocation,
+                NewUserName = user.UserName,
+                NewEmail = user.Email,
+                NewPhoneNumber = user.PhoneNumber,
+                NewVehicleMake = user.VehicleMake,
+                NewVehicleModel = user.VehicleModel,
+                NewDriverLocation = user.DriverLocation,
+
             };
             ViewBag.MessageId = message;
             return View(model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(UserUpdateViewModel userUpdateViewModel)
+        public async Task<ActionResult> Edit(EditUserInfoViewModel userEditUserInfoViewModel)
         {
-            if (!ModelState.IsValid) return View(userUpdateViewModel);
+            if (!ModelState.IsValid) return View(userEditUserInfoViewModel);
 
-            var user = await UserManager.FindByNameAsync(userUpdateViewModel.UserName);
+            var user = await UserManager.FindByNameAsync(userEditUserInfoViewModel.OldUserName);
             // Mapper.Map(userUpdateViewModel, user);  // move viewmodel to entity model
             // instead of automapper, you can do this:
-            user.UserName = userUpdateViewModel.UserName;
-            user.Email = userUpdateViewModel.Email;
+            user.UserName = userEditUserInfoViewModel.NewUserName;
+            user.Email = userEditUserInfoViewModel.NewEmail;
+            user.PhoneNumber = userEditUserInfoViewModel.NewPhoneNumber;
+            user.VehicleMake = userEditUserInfoViewModel.NewVehicleMake;
+            user.VehicleModel = userEditUserInfoViewModel.NewVehicleModel;
+            user.DriverLocation = userEditUserInfoViewModel.NewDriverLocation;
 
-            await UserManager.UpdateAsync(user);
+            UserManager.Update(user);
 
-            return RedirectToAction("Manage", new { Message = "Updated!" });
+            // resigns in for identity refresh 
+
+            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+            return RedirectToAction("Index", "Manage", new { Message = "Updated!" });
         }
 
         //

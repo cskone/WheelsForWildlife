@@ -5,31 +5,71 @@
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Edit User Info", "Edit", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Edit", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     <h4>Edit User Info Form</h4>
     <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.OldUserName)
+    @*<div class="form-group">
+            @Html.LabelFor(m => m.OldUserName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.OldUserName, new { @class = "form-control" })
+            </div>
+        </div>*@
     <div class="form-group">
-        @Html.LabelFor(m => m.OldEmail, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.NewUserName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.Old, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.NewUserName, new { placeholder = @Html.ValueFor(m => m.OldUserName), @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewUserName, "", new { @class = "text-danger" })
+
+
+        </div>
+    </div>
+    @*<div class="form-group">
+            @Html.LabelFor(m => m.OldEmail, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBox(m => m.OldEmail, new { @class = "form-control" })
+            </div>
+        </div>*@
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewEmail, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewEmail, new { placeholder = @Html.ValueFor(m => m.OldEmail), @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewEmail, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.NewPassword, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.NewPhoneNumber, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.NewPhoneNumber, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewPhoneNumber, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.NewVehicleModel, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.NewVehicleModel, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewVehicleModel, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewVehicleMake, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewVehicleMake, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewVehicleMake, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewDriverLocation, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewDriverLocation, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewDriverLocation, "", new { @class = "text-danger" })
         </div>
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Change password" class="btn btn-default" />
+            <input type="submit" value="Done" class="btn btn-default" />
         </div>
     </div>
 }

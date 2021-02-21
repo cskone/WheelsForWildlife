@@ -62,25 +62,56 @@ namespace Wildlife.Models
     {
         [Required]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Current Email")]
+        [Display(Name = "Old Email")]
         public string OldEmail { get; set; }
 
         [Required]
         [StringLength(255)]
-        [DataType(DataType.EmailAddress)]
-        [Display(Name = "New Email")]
+        [EmailAddress]
+        [Display(Name = "Email")]
         public string NewEmail { get; set; }
 
         [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "Current UserName")]
+        [EmailAddress]
+        [Display(Name = "Old UserName")]
         public string OldUserName { get; set; }
 
         [Required]
         [StringLength(100)]
-        [DataType(DataType.Text)]
-        [Display(Name = "New UserName")]
+        [EmailAddress]
+        [Display(Name = "UserName")]
         public string NewUserName { get; set; }
+
+        [Phone]
+        [Display(Name = "Old Phone Number")]
+        public string OldPhoneNumber { get; set; }
+
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string NewPhoneNumber { get; set; }
+
+        [Display(Name = "Old Vehicle Model")]
+        public string OldVehicleModel { get; set; }
+
+        [Required]
+        [Display(Name = "Vehicle Model")]
+        public string NewVehicleModel { get; set; }
+
+
+        [Display(Name = "Old Vehicle Make")]
+        public string OldVehicleMake { get; set; }
+
+        [Required]
+        [Display(Name = "Vehicle Make")]
+        public string NewVehicleMake { get; set; }
+
+        [Display(Name = "Old Driver Location (Zipcode)")]
+        public int OldDriverLocation { get; set; }
+
+        [Required]
+        [Display(Name = "Driver Location (Zipcode)")]
+        public int NewDriverLocation { get; set; }
 
     }
 
