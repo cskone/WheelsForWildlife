@@ -1,4 +1,7 @@
-﻿
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="MembersHomePage.aspx.cs" Inherits="Wildlife.MembersHomePage" %>
+
+<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Member's Home Page</title>
