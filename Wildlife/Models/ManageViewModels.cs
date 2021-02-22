@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Principal;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 
 namespace Wildlife.Models
@@ -12,6 +14,13 @@ namespace Wildlife.Models
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
+        public ApplicationUser User {get; set;}
+    }
+
+    public class DriveIndexViewModel
+    {
+        public List<Drive> drives { get; set; }
+        public ApplicationUser User { get; set; }
     }
 
     public class ManageLoginsViewModel

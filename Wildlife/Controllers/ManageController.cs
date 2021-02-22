@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -95,6 +96,10 @@ namespace Wildlife.Controllers
         {
             if (!ModelState.IsValid) return View(userEditUserInfoViewModel);
 
+            // test random stuff
+            //Random generator = new Random();
+            //Int32.Parse(generator.Next(0, 1000000).ToString("D6"));
+
             var user = await UserManager.FindByNameAsync(userEditUserInfoViewModel.OldUserName);
             // Mapper.Map(userUpdateViewModel, user);  // move viewmodel to entity model
             // instead of automapper, you can do this:
@@ -104,7 +109,7 @@ namespace Wildlife.Controllers
             user.VehicleMake = userEditUserInfoViewModel.NewVehicleMake;
             user.VehicleModel = userEditUserInfoViewModel.NewVehicleModel;
             user.DriverLocation = userEditUserInfoViewModel.NewDriverLocation;
-
+            //user.Drives.Add(new Drive("DriveName" + generator.Next(0, 1000000).ToString("D6"),  Int32.Parse(generator.Next(0, 1000000).ToString("D6")), Int32.Parse(generator.Next(0, 1000000).ToString("D6")), user.Id));
             UserManager.Update(user);
 
             // resigns in for identity refresh 
@@ -134,8 +139,9 @@ namespace Wildlife.Controllers
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
-            };
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                User = UserManager.FindByNameAsync(User.Identity.Name).Result
+        };
             return View(model);
         }
 

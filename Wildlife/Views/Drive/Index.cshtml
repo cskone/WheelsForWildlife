@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Wildlife.Models.Drive>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DriveName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndLocation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExtraDetails)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DriverId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DriveName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ExtraDetails)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DriverId)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.DriveId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.DriveId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.DriveId })
+        </td>
+    </tr>
+}
+
+</table>
