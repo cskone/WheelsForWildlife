@@ -1,0 +1,59 @@
+﻿@model Wildlife.Models.Drive
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Drive</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DriveName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DriveName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartLocation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartLocation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndLocation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndLocation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ExtraDetails)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExtraDetails)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DriverId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DriverId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DriveId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
