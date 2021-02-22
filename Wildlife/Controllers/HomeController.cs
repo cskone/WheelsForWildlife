@@ -15,7 +15,7 @@ namespace Wildlife.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "About Wheels for Wildlife";
 
             return View();
         }

@@ -22,3 +22,25 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.navbar-inverse .navbar-brand {
+    color: white !important;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    padding: 14px 20px !important;
+    text-transform: uppercase !important;
+    border: 0px solid #333;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+.navbar-inverse {
+    background-color: #254a65 !important;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    font-weight: 700;
+
+}
