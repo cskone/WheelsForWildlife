@@ -13,6 +13,7 @@ using System.IO;
 //using System.Device.Location;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Device.Location;
 
 namespace Wildlife.Controllers
 {
@@ -101,6 +102,7 @@ namespace Wildlife.Controllers
             }
             var driveInfoViewModel = new DriveInfoViewModel
             {
+                DriveId = drive.DriveId,
                 DriveName = drive.DriveName,
                 ExtraDetails = drive.ExtraDetails,
                 DriverId = drive.DriverId,
@@ -108,18 +110,29 @@ namespace Wildlife.Controllers
                 StartAddressLine1 = drive.StartLocation.AddressLine1,
                 StartAddressLine2 = drive.StartLocation.AddressLine2,
                 StartCity = drive.StartLocation.City,
-                StartCountryRegion = drive.StartLocation.AddressLine1,
-                StartPostalCode = drive.StartLocation.AddressLine1,
-                StartStateProvince = drive.StartLocation.AddressLine1,
+                StartCountryRegion = drive.StartLocation.CountryRegion,
+                StartPostalCode = drive.StartLocation.PostalCode,
+                StartStateProvince = drive.StartLocation.StateProvince,
 
                 EndAddressLine1 = drive.EndLocation.AddressLine1,
                 EndAddressLine2 = drive.EndLocation.AddressLine2,
                 EndCity = drive.EndLocation.City,
-                EndCountryRegion = drive.EndLocation.AddressLine1,
-                EndPostalCode = drive.EndLocation.AddressLine1,
-                EndStateProvince = drive.EndLocation.AddressLine1,
+                EndCountryRegion = drive.EndLocation.CountryRegion,
+                EndPostalCode = drive.EndLocation.PostalCode,
+                EndStateProvince = drive.EndLocation.StateProvince,
 
             };
+
+            var user = await UserManager.FindByIdAsync(drive.DriverId);
+            if (user != null)
+            {
+                driveInfoViewModel.DriverId = user.UserName;
+            }
+            else
+            {
+                driveInfoViewModel.DriverId = null;
+            }
+
             return View(driveInfoViewModel);
         }
 
@@ -153,9 +166,15 @@ namespace Wildlife.Controllers
                     driveInfoViewModel.EndCountryRegion,
                     null, driveInfoViewModel.EndPostalCode,
                     driveInfoViewModel.EndStateProvince);
-                Drive drive = new Drive(driveInfoViewModel.DriveName, driveInfoViewModel.ExtraDetails, startLocation, endLocation, driveInfoViewModel.DriverId);
+                var drive = await db.Drives.FindAsync(driveInfoViewModel.DriveId);
+                drive.DriveName = driveInfoViewModel.DriveName;
+                drive.DriverId = driveInfoViewModel.DriverId;
+                drive.StartLocation = startLocation;
+                drive.EndLocation = endLocation;
+                drive.ExtraDetails = drive.ExtraDetails;
+
                 db.Entry(drive).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                _ = await db.SaveChangesAsync();
                 return RedirectToAction("Index", "Drive", new { Message = "Updated!" });
             }
             return View(driveInfoViewModel);

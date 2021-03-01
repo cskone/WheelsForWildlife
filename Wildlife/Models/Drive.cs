@@ -17,10 +17,9 @@ namespace Wildlife.Models
         [Required]
         [Display(Name = "Drive Title")]
         public string DriveName { get; set; }
-        [Required]
-        [Display(Name = "Drive Starting Location")]
+        //[Required] - this restructures the entire database and breaks everything whoever did this in microsoft is mean[Display(Name = "Drive Starting Location")]
         public CivicAddress StartLocation { get; set; }
-        [Required]
+        //[Required] - this restructures the entire database and breaks everything whoever did this in microsoft is mean
         [Display(Name = "Drive Ending Location")]
         public CivicAddress EndLocation { get; set; }
         [Display(Name = "Drive Details")]
@@ -49,7 +48,6 @@ namespace Wildlife.Models
         {
 
         }
-    
     }
 
 }

@@ -187,13 +187,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103011913233_Initial.cs" />
-    <Compile Include="Migrations\202103011913233_Initial.Designer.cs">
-      <DependentUpon>202103011913233_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202103012103357_Initial.cs" />
+    <Compile Include="Migrations\202103012103357_Initial.Designer.cs">
+      <DependentUpon>202103012103357_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CivicAddress.cs" />
+    <Compile Include="Models\CivicAddress123.cs" />
     <Compile Include="Models\Drive.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -266,6 +266,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Drives\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -284,8 +285,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202103011913233_Initial.resx">
-      <DependentUpon>202103011913233_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202103012103357_Initial.resx">
+      <DependentUpon>202103012103357_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

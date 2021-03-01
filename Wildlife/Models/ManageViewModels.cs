@@ -126,6 +126,8 @@ namespace Wildlife.Models
     public class DriveInfoViewModel
     {
         [Required]
+        public int DriveId { get; set; }
+        [Required]
         [Display(Name = "Drive Title")]
         public string DriveName { get; set; }
 
