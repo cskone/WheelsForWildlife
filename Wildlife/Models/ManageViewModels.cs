@@ -123,6 +123,71 @@ namespace Wildlife.Models
 
     }
 
+    public class DriveInfoViewModel
+    {
+        [Required]
+        [Display(Name = "Drive Title")]
+        public string DriveName { get; set; }
+
+        [Required]
+        [Display(Name = "Address Line 1")]
+        public string StartAddressLine1 { get; set; }
+
+        [Display(Name = "Address Line 2")]
+        public string StartAddressLine2 { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
+        public string StartCity { get; set; }
+
+
+        [Required]
+        [Display(Name = "Country")]
+        public string StartCountryRegion { get; set; }
+
+
+        [Required]
+        [Display(Name = "Postal Code")]
+        public string StartPostalCode { get; set; }
+
+
+        [Required]
+        [Display(Name = "State")]
+        public string StartStateProvince { get; set; }
+
+        [Required]
+        [Display(Name = "Address Line 1")]
+        public string EndAddressLine1 { get; set; }
+
+        [Display(Name = "Address Line 2")]
+        public string EndAddressLine2 { get; set; }
+
+        [Required]
+        [Display(Name = "City")]
+        public string EndCity { get; set; }
+
+
+        [Required]
+        [Display(Name = "Country")]
+        public string EndCountryRegion { get; set; }
+
+
+        [Required]
+        [Display(Name = "Postal Code")]
+        public string EndPostalCode { get; set; }
+
+
+        [Required]
+        [Display(Name = "State")]
+        public string EndStateProvince { get; set; }
+
+        [Display(Name = "Drive Details")]
+        public string ExtraDetails { get; set; }
+
+        [Display(Name = "Driver Email")]
+        public string DriverId { get; set; }
+    }
+
     public class AddPhoneNumberViewModel
     {
         [Required]

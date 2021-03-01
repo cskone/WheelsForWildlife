@@ -20,5 +20,7 @@ namespace Wildlife.Data
         }
 
         public System.Data.Entity.DbSet<Wildlife.Models.Drive> Drives { get; set; }
+        public System.Data.Entity.DbSet<Wildlife.Models.CivicAddress> CivicAddresses { get; set; }
+
     }
 }
