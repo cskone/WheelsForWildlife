@@ -25,7 +25,43 @@ namespace Wildlife.Controllers
         // GET: Drives
         public async Task<ActionResult> Index()
         {
-            return View(await db.Drives.ToListAsync());
+            var drives = await db.Drives.ToListAsync();
+            List<DriveInfoViewModel> driveInfoViewModels = new List<DriveInfoViewModel>();
+            foreach ( var drive in drives) {
+                var driveInfoViewModel = new DriveInfoViewModel
+                {
+                    DriveId = drive.DriveId,
+                    DriveName = drive.DriveName,
+                    ExtraDetails = drive.ExtraDetails,
+                    DriverId = drive.DriverId,
+
+                    StartAddressLine1 = drive.StartLocation.AddressLine1,
+                    StartAddressLine2 = drive.StartLocation.AddressLine2,
+                    StartCity = drive.StartLocation.City,
+                    StartCountryRegion = drive.StartLocation.CountryRegion,
+                    StartPostalCode = drive.StartLocation.PostalCode,
+                    StartStateProvince = drive.StartLocation.StateProvince,
+
+                    EndAddressLine1 = drive.EndLocation.AddressLine1,
+                    EndAddressLine2 = drive.EndLocation.AddressLine2,
+                    EndCity = drive.EndLocation.City,
+                    EndCountryRegion = drive.EndLocation.CountryRegion,
+                    EndPostalCode = drive.EndLocation.PostalCode,
+                    EndStateProvince = drive.EndLocation.StateProvince,
+
+                };
+                var user = await UserManager.FindByIdAsync(drive.DriverId);
+                if (user != null)
+                {
+                    driveInfoViewModel.DriverId = user.UserName;
+                }
+                else
+                {
+                    driveInfoViewModel.DriverId = null;
+                }
+                driveInfoViewModels.Add(driveInfoViewModel);
+            }
+            return View(driveInfoViewModels);
         }
 
         // GET: Drives/Details/5
@@ -40,7 +76,40 @@ namespace Wildlife.Controllers
             {
                 return HttpNotFound();
             }
-            return View(drive);
+            var driveInfoViewModel = new DriveInfoViewModel
+            {
+                DriveId = drive.DriveId,
+                DriveName = drive.DriveName,
+                ExtraDetails = drive.ExtraDetails,
+                DriverId = drive.DriverId,
+
+                StartAddressLine1 = drive.StartLocation.AddressLine1,
+                StartAddressLine2 = drive.StartLocation.AddressLine2,
+                StartCity = drive.StartLocation.City,
+                StartCountryRegion = drive.StartLocation.CountryRegion,
+                StartPostalCode = drive.StartLocation.PostalCode,
+                StartStateProvince = drive.StartLocation.StateProvince,
+
+                EndAddressLine1 = drive.EndLocation.AddressLine1,
+                EndAddressLine2 = drive.EndLocation.AddressLine2,
+                EndCity = drive.EndLocation.City,
+                EndCountryRegion = drive.EndLocation.CountryRegion,
+                EndPostalCode = drive.EndLocation.PostalCode,
+                EndStateProvince = drive.EndLocation.StateProvince,
+
+            };
+
+            var user = await UserManager.FindByIdAsync(drive.DriverId);
+            if (user != null)
+            {
+                driveInfoViewModel.DriverId = user.UserName;
+            }
+            else
+            {
+                driveInfoViewModel.DriverId = null;
+            }
+
+            return View(driveInfoViewModel);
         }
 
         // GET: Drives/Create
@@ -58,14 +127,17 @@ namespace Wildlife.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(driveInfoViewModel.DriverId);
-                if (user != null)
+                if (driveInfoViewModel.DriverId != null)
                 {
-                    driveInfoViewModel.DriverId = user.Id;
-                }
-                else
-                {
-                    driveInfoViewModel.DriverId = null;
+                    var user = await UserManager.FindByNameAsync(driveInfoViewModel.DriverId);
+                    if (user != null)
+                    {
+                        driveInfoViewModel.DriverId = user.Id;
+                    }
+                    else
+                    {
+                        driveInfoViewModel.DriverId = null;
+                    }
                 }
                 CivicAddress startLocation = new CivicAddress(driveInfoViewModel.StartAddressLine1,
                     driveInfoViewModel.StartAddressLine2,

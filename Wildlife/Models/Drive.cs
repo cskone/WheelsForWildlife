@@ -15,7 +15,7 @@ namespace Wildlife.Models
         [Display(Name = "Drive Id")]
         public int DriveId { get; set; }
         [Required]
-        [Display(Name = "Drive Title")]
+        [Display(Name = "Drive Name")]
         public string DriveName { get; set; }
         //[Required] - this restructures the entire database and breaks everything whoever did this in microsoft is mean[Display(Name = "Drive Starting Location")]
         public CivicAddress StartLocation { get; set; }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Wildlife.Models.Drive>
+﻿@model IEnumerable<Wildlife.Models.DriveInfoViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -24,23 +24,39 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DriveName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ExtraDetails)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DriverId)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.DriveId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.DriveId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.DriveId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr style="border-top:2px solid black;">
+            <td>
+                @Html.DisplayFor(modelItem => item.DriveName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExtraDetails)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.DriverId)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.DriveId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.DriveId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.DriveId })
+            </td>
+        </tr>
+        <tr style="border-bottom:2px solid black;display:contents;width:100%">
+            <td>
+                @Html.DisplayFor(modelItem => item.StartAddressLine1),
+                @Html.DisplayFor(modelItem => item.StartCity)
+                @*<h1 style="padding:0px;margin:0;display:inline-block;margin-block-start:0;margin-block-end:0;">
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&rArr;
+                </h1>*@
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndAddressLine1)
+                @Html.DisplayFor(modelItem => item.EndCity)
+            </td>
+        </tr>
+    }
 
 </table>
