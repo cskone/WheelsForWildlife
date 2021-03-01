@@ -10,7 +10,6 @@ namespace Wildlife.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "Wildlife.Models.ApplicationDbContext";
         }
 
         protected override void Seed(Wildlife.Models.ApplicationDbContext context)

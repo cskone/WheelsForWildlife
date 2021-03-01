@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Device.Location;
 using System.Linq;
 using System.Web;
-
 namespace Wildlife.Models
 {
+    [Table("dbo.Drives")]
     public class Drive
     {
         [Key]
@@ -17,22 +19,32 @@ namespace Wildlife.Models
         public string DriveName { get; set; }
         [Required]
         [Display(Name = "Drive Starting Location")]
-        public int StartLocation { get; set; }
+        public CivicAddress StartLocation { get; set; }
         [Required]
         [Display(Name = "Drive Ending Location")]
-        public int EndLocation { get; set; }
+        public CivicAddress EndLocation { get; set; }
         [Display(Name = "Drive Details")]
         public string ExtraDetails { get; set; }
         [Display(Name = "Driver Email")]
         public string DriverId { get; set; }
 
-        public Drive(string driveName, int startLocation, int endLocation, string driverId)
+        public Drive(string driveName, CivicAddress startLocation, CivicAddress endLocation, string driverId)
         {
             DriveName = driveName;
+            StartLocation = startLocation;
+            EndLocation = endLocation;  
+            DriverId = driverId;
+        }
+
+        public Drive(string driveName, string extraDetails, CivicAddress startLocation, CivicAddress endLocation, string driverId)
+        {
+            DriveName = driveName;
+            ExtraDetails = extraDetails;
             StartLocation = startLocation;
             EndLocation = endLocation;
             DriverId = driverId;
         }
+
         public Drive()
         {
 

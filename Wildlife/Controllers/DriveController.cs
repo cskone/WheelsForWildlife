@@ -9,8 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using Wildlife.Data;
 using Wildlife.Models;
+using System.IO;
+//using System.Device.Location;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Ajax.Utilities;
 
 namespace Wildlife.Controllers
 {
@@ -19,13 +21,13 @@ namespace Wildlife.Controllers
         private DriveContext db = new DriveContext();
         private ApplicationUserManager _userManager;
 
-        // GET: Drive
+        // GET: Drives
         public async Task<ActionResult> Index()
         {
             return View(await db.Drives.ToListAsync());
         }
 
-        // GET: Drive/Details/5
+        // GET: Drives/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,39 +42,52 @@ namespace Wildlife.Controllers
             return View(drive);
         }
 
-        // GET: Drive/Create
+        // GET: Drives/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Drive/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // POST: Drives/Create
+        // To protect from overposting  attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "DriveId,DriveName,StartLocation,EndLocation,ExtraDetails,DriverId")] Drive drive)
+        public async Task<ActionResult> Create(DriveInfoViewModel driveInfoViewModel)
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(drive.DriverId);
+                var user = await UserManager.FindByNameAsync(driveInfoViewModel.DriverId);
                 if (user != null)
                 {
-                    drive.DriverId = user.Id;
+                    driveInfoViewModel.DriverId = user.Id;
                 }
                 else
                 {
-                    drive.DriverId = null;
+                    driveInfoViewModel.DriverId = null;
                 }
+                CivicAddress startLocation = new CivicAddress(driveInfoViewModel.StartAddressLine1,
+                    driveInfoViewModel.StartAddressLine2,
+                    null, driveInfoViewModel.StartCity,
+                    driveInfoViewModel.StartCountryRegion,
+                    null, driveInfoViewModel.StartPostalCode,
+                    driveInfoViewModel.StartStateProvince);
+                CivicAddress endLocation = new CivicAddress(driveInfoViewModel.EndAddressLine1,
+                    driveInfoViewModel.EndAddressLine2,
+                    null, driveInfoViewModel.EndCity,
+                    driveInfoViewModel.EndCountryRegion,
+                    null, driveInfoViewModel.EndPostalCode,
+                    driveInfoViewModel.EndStateProvince);
+                Drive drive = new Drive(driveInfoViewModel.DriveName, driveInfoViewModel.ExtraDetails,startLocation, endLocation, driveInfoViewModel.DriverId);
                 db.Drives.Add(drive);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(drive);
+            return View(driveInfoViewModel);
         }
 
-        // GET: Drive/Edit/5
+        // GET: Drives/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,38 +99,69 @@ namespace Wildlife.Controllers
             {
                 return HttpNotFound();
             }
-            // in case of manual db input shenanigans (definitely didn't cause that myself)
-            var user = await UserManager.FindByIdAsync(drive.DriverId);
-            if (user != null) { drive.DriverId = user.UserName; }
-            return View(drive);
+            var driveInfoViewModel = new DriveInfoViewModel
+            {
+                DriveName = drive.DriveName,
+                ExtraDetails = drive.ExtraDetails,
+                DriverId = drive.DriverId,
+
+                StartAddressLine1 = drive.StartLocation.AddressLine1,
+                StartAddressLine2 = drive.StartLocation.AddressLine2,
+                StartCity = drive.StartLocation.City,
+                StartCountryRegion = drive.StartLocation.AddressLine1,
+                StartPostalCode = drive.StartLocation.AddressLine1,
+                StartStateProvince = drive.StartLocation.AddressLine1,
+
+                EndAddressLine1 = drive.EndLocation.AddressLine1,
+                EndAddressLine2 = drive.EndLocation.AddressLine2,
+                EndCity = drive.EndLocation.City,
+                EndCountryRegion = drive.EndLocation.AddressLine1,
+                EndPostalCode = drive.EndLocation.AddressLine1,
+                EndStateProvince = drive.EndLocation.AddressLine1,
+
+            };
+            return View(driveInfoViewModel);
         }
 
-        // POST: Drive/Edit/5
+        // POST: Drives/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "DriveId,DriveName,StartLocation,EndLocation,ExtraDetails,DriverId")] Drive drive)
+        public async Task<ActionResult> Edit(DriveInfoViewModel driveInfoViewModel)
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(drive.DriverId);
+                var user = await UserManager.FindByNameAsync(driveInfoViewModel.DriverId);
                 if (user != null)
                 {
-                    drive.DriverId = user.Id;
+                    driveInfoViewModel.DriverId = user.Id;
                 }
                 else
                 {
-                    drive.DriverId = null;
+                    driveInfoViewModel.DriverId = null;
                 }
+                CivicAddress startLocation = new CivicAddress(driveInfoViewModel.StartAddressLine1,
+                    driveInfoViewModel.StartAddressLine2,
+                    null, driveInfoViewModel.StartCity,
+                    driveInfoViewModel.StartCountryRegion,
+                    null, driveInfoViewModel.StartPostalCode,
+                    driveInfoViewModel.StartStateProvince);
+                CivicAddress endLocation = new CivicAddress(driveInfoViewModel.EndAddressLine1,
+                    driveInfoViewModel.EndAddressLine2,
+                    null, driveInfoViewModel.EndCity,
+                    driveInfoViewModel.EndCountryRegion,
+                    null, driveInfoViewModel.EndPostalCode,
+                    driveInfoViewModel.EndStateProvince);
+                Drive drive = new Drive(driveInfoViewModel.DriveName, driveInfoViewModel.ExtraDetails, startLocation, endLocation, driveInfoViewModel.DriverId);
                 db.Entry(drive).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Drive", new { Message = "Updated!" });
             }
-            return View(drive);
+            return View(driveInfoViewModel);
         }
 
-        // GET: Drive/Delete/5
+        // GET: Drives/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,7 +176,7 @@ namespace Wildlife.Controllers
             return View(drive);
         }
 
-        // POST: Drive/Delete/5
+        // POST: Drives/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
@@ -171,6 +217,5 @@ namespace Wildlife.Controllers
                 _userManager = value;
             }
         }
-
     }
 }
