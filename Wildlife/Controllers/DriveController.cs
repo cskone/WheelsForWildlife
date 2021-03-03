@@ -34,6 +34,8 @@ namespace Wildlife.Controllers
                     DriveName = drive.DriveName,
                     ExtraDetails = drive.ExtraDetails,
                     DriverId = drive.DriverId,
+                    DriveDistance = (double)drive.DriveDistance * 0.000621371192,
+                    DriveDuration = drive.DriveDuration / 60,
 
                     StartAddressLine1 = drive.StartLocation.AddressLine1,
                     StartAddressLine2 = drive.StartLocation.AddressLine2,
@@ -82,6 +84,8 @@ namespace Wildlife.Controllers
                 DriveName = drive.DriveName,
                 ExtraDetails = drive.ExtraDetails,
                 DriverId = drive.DriverId,
+                DriveDistance = (double)drive.DriveDistance * 0.000621371192,
+                DriveDuration = drive.DriveDuration / 60,
 
                 StartAddressLine1 = drive.StartLocation.AddressLine1,
                 StartAddressLine2 = drive.StartLocation.AddressLine2,
@@ -160,6 +164,8 @@ namespace Wildlife.Controllers
             return View(driveInfoViewModel);
         }
 
+
+        // TODO: check if addresses changed, and if so recalc drive dur and dist
         // GET: Drives/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {

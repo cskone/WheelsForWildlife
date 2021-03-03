@@ -195,6 +195,12 @@ namespace Wildlife.Models
 
         [Display(Name = "Driver Email")]
         public string DriverId { get; set; }
+
+        [Display(Name = "Distance")]
+        public double DriveDistance { get; set; }
+
+        [Display(Name = "Duration")]
+        public decimal DriveDuration { get; set; }
     }
 
     public class AddPhoneNumberViewModel
