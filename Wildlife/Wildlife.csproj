@@ -187,13 +187,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103012103357_Initial.cs" />
-    <Compile Include="Migrations\202103012103357_Initial.Designer.cs">
-      <DependentUpon>202103012103357_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202102250706476_CivicAddress_Update.cs" />
-    <Compile Include="Migrations\202102250706476_CivicAddress_Update.Designer.cs">
-      <DependentUpon>202102250706476_CivicAddress_Update.cs</DependentUpon>
+    <Compile Include="Migrations\202103032257527_Initial.cs" />
+    <Compile Include="Migrations\202103032257527_Initial.Designer.cs">
+      <DependentUpon>202103032257527_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -288,11 +284,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202103012103357_Initial.resx">
-      <DependentUpon>202103012103357_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202102250706476_CivicAddress_Update.resx">
-      <DependentUpon>202102250706476_CivicAddress_Update.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202103032257527_Initial.resx">
+      <DependentUpon>202103032257527_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -7,13 +7,13 @@ namespace Wildlife.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class CivicAddress_Update : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CivicAddress_Update));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "202102250706476_CivicAddress_Update"; }
+            get { return "202103032257527_Initial"; }
         }
         
         string IMigrationMetadata.Source
