@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Device.Location;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -78,14 +79,20 @@ namespace Wildlife.Controllers
                 OldPhoneNumber = user.PhoneNumber,
                 OldVehicleMake = user.VehicleMake,
                 OldVehicleModel = user.VehicleModel,
-                OldDriverLocation = user.DriverLocation,
+                // OldDriverLocation = user.DriverLocation
+
                 NewUserName = user.UserName,
                 NewEmail = user.Email,
                 NewPhoneNumber = user.PhoneNumber,
                 NewVehicleMake = user.VehicleMake,
                 NewVehicleModel = user.VehicleModel,
-                NewDriverLocation = user.DriverLocation,
-
+                // NewDriverLocation = user.DriverLocation
+                NewAddressLine1 = user.DriverLocation.AddressLine1,
+                NewAddressLine2 = user.DriverLocation.AddressLine2,
+                NewCity = user.DriverLocation.City,
+                NewStateProvince = user.DriverLocation.StateProvince,
+                NewPostalCode = user.DriverLocation.PostalCode
+                
             };
             ViewBag.MessageId = message;
             return View(model);
@@ -108,8 +115,20 @@ namespace Wildlife.Controllers
             user.PhoneNumber = userEditUserInfoViewModel.NewPhoneNumber;
             user.VehicleMake = userEditUserInfoViewModel.NewVehicleMake;
             user.VehicleModel = userEditUserInfoViewModel.NewVehicleModel;
-            user.DriverLocation = userEditUserInfoViewModel.NewDriverLocation;
-            //user.Drives.Add(new Drive("DriveName" + generator.Next(0, 1000000).ToString("D6"),  Int32.Parse(generator.Next(0, 1000000).ToString("D6")), Int32.Parse(generator.Next(0, 1000000).ToString("D6")), user.Id));
+
+            user.DriverLocation.AddressLine1 = userEditUserInfoViewModel.NewAddressLine1;
+            user.DriverLocation.AddressLine2 = userEditUserInfoViewModel.NewAddressLine2;
+            user.DriverLocation.City = userEditUserInfoViewModel.NewCity;
+            user.DriverLocation.StateProvince = userEditUserInfoViewModel.NewStateProvince;
+            user.DriverLocation.PostalCode = userEditUserInfoViewModel.NewPostalCode;
+            /*
+            user.DriverLocation.AddressLine1 = userEditUserInfoViewModel.NewAddressLine1;
+            user.DriverLocation.AddressLine2 = userEditUserInfoViewModel.NewAddressLine2;
+            user.DriverLocation.City = userEditUserInfoViewModel.NewCity;
+            user.DriverLocation.StateProvince = userEditUserInfoViewModel.NewStateProvince;
+            user.DriverLocation.PostalCode = userEditUserInfoViewModel.NewPostalCode;
+            */
+
             UserManager.Update(user);
 
             // resigns in for identity refresh 

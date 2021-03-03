@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Device.Location;
 using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -114,15 +115,21 @@ namespace Wildlife.Models
         [Display(Name = "Vehicle Make")]
         public string NewVehicleMake { get; set; }
 
-        [Display(Name = "Old Driver Location (Zipcode)")]
-        public int OldDriverLocation { get; set; }
-
         [Required]
-        [Display(Name = "Driver Location (Zipcode)")]
-        public int NewDriverLocation { get; set; }
-
+        [Display(Name = "Address Line 1")]
+        public string NewAddressLine1 { get; set; }
+        [Display(Name = "Address Line 2")]
+        public string NewAddressLine2 { get; set; }
+        [Required]
+        [Display(Name = "City")]
+        public string NewCity { get; set; }
+        [Required]
+        [Display(Name = "State")]
+        public string NewStateProvince { get; set; }
+        [Required]
+        [Display(Name = "Zip Code")]
+        public string NewPostalCode { get; set; }
     }
-
     public class DriveInfoViewModel
     {
         [Required]

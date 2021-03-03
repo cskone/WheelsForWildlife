@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
+using System.Device.Location;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -25,14 +26,16 @@ namespace Wildlife.Models
         public int DriveCount { get; set; }     // Total number of drives
         public double DriveHours { get; set; }  // Total hours spent on drives based on function of Drive.DriveStart and Drive.DriveEnd
         public int AnimalCount { get; set; }    // Number of animals transported
-        public int DriverLocation { get; set; }  // Location of driver. Holding Zipcode as int for now
+        // https://docs.microsoft.com/en-us/dotnet/api/system.device.location?view=netframework-4.8
+        public CivicAddress DriverLocation { get; set; }
+//        public int DriverLication { get; set; }
 
         public virtual ICollection<Drive> Drives { get; set; }
 
 
         // not sure this is how we should store this
         [DataType(DataType.DateTime)]
-        public DateTime[][] AvailabilityRange { get; set; } // First index is a discrete number of start-stop DateTimes. Second index will be size 2 containing [startDateTime, stopDateTime]
+        public DateTime[][] AvailabilityRange { get; set; } // First index is a continuous number of start-stop DateTimes. Second index will be size 2 containing [startDateTime, stopDateTime]
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
