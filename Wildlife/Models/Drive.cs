@@ -36,8 +36,9 @@ namespace Wildlife.Models
         public string ExtraDetails { get; set; }
         [Display(Name = "Driver Email")]
         public string DriverId { get; set; }
-
+        [DisplayFormat(DataFormatString = "{0:2}", ApplyFormatInEditMode = true)]
         public decimal DriveDistance { get; set; }
+        [DisplayFormat(DataFormatString = "{0:2}", ApplyFormatInEditMode = true)]
         public decimal DriveDuration { get; set; }
 
 
@@ -48,8 +49,8 @@ namespace Wildlife.Models
             EndLocation = endLocation;  
             DriverId = driverId;
             Tuple<int, int> driveDetails = CalcDriveDetails();
-            DriveDistance = driveDetails.Item1;
-            DriveDuration = driveDetails.Item2;
+            DriveDistance = driveDetails.Item2;
+            DriveDuration = driveDetails.Item1;
         }
 
         public Drive(string driveName, string extraDetails, CivicAddress startLocation, CivicAddress endLocation, string driverId)
