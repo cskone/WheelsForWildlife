@@ -187,21 +187,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202103032257527_Initial.cs" />
-    <Compile Include="Migrations\202103032257527_Initial.Designer.cs">
-      <DependentUpon>202103032257527_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103032006583_mapdetailsaddedtodrive.cs" />
-    <Compile Include="Migrations\202103032006583_mapdetailsaddedtodrive.Designer.cs">
-      <DependentUpon>202103032006583_mapdetailsaddedtodrive.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202103032041049_updated_mapdetails.cs" />
-    <Compile Include="Migrations\202103032041049_updated_mapdetails.Designer.cs">
-      <DependentUpon>202103032041049_updated_mapdetails.cs</DependentUpon>
+    <Compile Include="Migrations\202103062246153_Initial.cs" />
+    <Compile Include="Migrations\202103062246153_Initial.Designer.cs">
+      <DependentUpon>202103062246153_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CivicAddress123.cs" />
     <Compile Include="Models\Drive.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -292,14 +283,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202103032257527_Initial.resx">
-      <DependentUpon>202103032257527_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103032006583_mapdetailsaddedtodrive.resx">
-      <DependentUpon>202103032006583_mapdetailsaddedtodrive.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202103032041049_updated_mapdetails.resx">
-      <DependentUpon>202103032041049_updated_mapdetails.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202103062246153_Initial.resx">
+      <DependentUpon>202103062246153_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

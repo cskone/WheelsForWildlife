@@ -32,15 +32,34 @@ textarea {
     border: 0px solid #333;
     font-size: 14px !important;
     font-weight: 700 !important;
+    text-align: center;
 }
 
 .navbar-inverse {
     background-color: #254a65 !important;
+    padding-bottom: 10px;
+    padding-top: 10px; 
 }
 
 .navbar-inverse .navbar-nav > li > a {
     font-family: 'Montserrat', sans-serif;
     color: white;
     font-weight: 700;
+    padding: 21px 10px;
+    line-height: 19px;
+    overflow: hidden;
+}
 
+.navbar-brand > img {
+    display:inline;
+    max-width: 45px;
+    /*padding: 20px;*/
+    margin-top: -8px;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #101010;
+    /*margin-top: 10px;*/
+    margin-left: 0px;
+    overflow: hidden;
 }

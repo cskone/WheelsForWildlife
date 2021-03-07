@@ -60,8 +60,8 @@ namespace Wildlife.Models
             EndLocation = endLocation;
             DriverId = driverId;
             Tuple<int, int> driveDetails = CalcDriveDetails();
-            DriveDistance = driveDetails.Item1;
-            DriveDuration = driveDetails.Item2;
+            DriveDuration = driveDetails.Item1;
+            DriveDistance = driveDetails.Item2;
         }
 
         public Drive()

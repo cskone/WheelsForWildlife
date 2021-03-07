@@ -101,6 +101,8 @@ namespace Wildlife.Migrations
                         EndLocation_StateProvince = c.String(),
                         ExtraDetails = c.String(),
                         DriverId = c.String(),
+                        DriveDistance = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        DriveDuration = c.Decimal(nullable: false, precision: 18, scale: 2),
                         ApplicationUser_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.DriveId)

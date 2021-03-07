@@ -7,13 +7,13 @@ namespace Wildlife.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class mapdetailsaddedtodrive : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(mapdetailsaddedtodrive));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "202103032006583_mapdetailsaddedtodrive"; }
+            get { return "202103062246153_Initial"; }
         }
         
         string IMigrationMetadata.Source
