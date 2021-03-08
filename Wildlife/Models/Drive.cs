@@ -116,10 +116,14 @@ namespace Wildlife.Models
 
 
                 JObject values = JObject.Parse(resp);
-                var duration = (string)values["rows"][0]["elements"][0]["duration"]["value"];
-                var distance = (string)values["rows"][0]["elements"][0]["distance"]["value"];
-                return Tuple.Create(Int32.Parse(duration), Int32.Parse(distance));
-                //return Tuple.Create(values[], values[1]);
+                if (!((string)values["rows"][0]["elements"][0]["status"] == "ZERO_RESULTS"))
+                {
+                    var duration = (string)values["rows"][0]["elements"][0]["duration"]["value"];
+                    var distance = (string)values["rows"][0]["elements"][0]["distance"]["value"];
+                    return Tuple.Create(Int32.Parse(duration), Int32.Parse(distance));
+                    //return Tuple.Create(values[], values[1]);
+                }
+                return Tuple.Create(-1, -1);
             }
 
             catch (Exception ex)
