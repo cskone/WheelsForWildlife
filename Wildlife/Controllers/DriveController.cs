@@ -14,6 +14,7 @@ using System.IO;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Device.Location;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Wildlife.Controllers
 {
@@ -22,9 +23,45 @@ namespace Wildlife.Controllers
         private DriveContext db = new DriveContext();
         private ApplicationUserManager _userManager;
 
+        public Boolean isAdminUser()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                ApplicationDbContext context = new ApplicationDbContext();
+                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+                var s = UserManager.GetRoles(user.GetUserId());
+                if (s.Count != 0 && s[0].ToString() == "Admin")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         // GET: Drives
         public async Task<ActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                ViewBag.Name = user.Name;
+
+                ViewBag.displayMenu = "Driver";
+
+                if (isAdminUser())
+                {
+                    ViewBag.displayMenu = "Admin";
+                }
+            }
+            else
+            {
+                ViewBag.Name = "Not Logged IN";
+            }
             var drives = await db.Drives.ToListAsync();
             List<DriveInfoViewModel> driveInfoViewModels = new List<DriveInfoViewModel>();
             foreach ( var drive in drives) {
@@ -117,9 +154,11 @@ namespace Wildlife.Controllers
         }
 
         // GET: Drives/Create
+        [CustomAuthorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
+
         }
 
         // POST: Drives/Create
@@ -167,6 +206,7 @@ namespace Wildlife.Controllers
 
         // TODO: check if addresses changed, and if so recalc drive dur and dist
         // GET: Drives/Edit/5
+        [CustomAuthorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -259,6 +299,7 @@ namespace Wildlife.Controllers
         }
 
         // GET: Drives/Delete/5
+        [CustomAuthorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
