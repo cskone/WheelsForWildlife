@@ -31,6 +31,7 @@ namespace Wildlife.Models
 //        public int DriverLication { get; set; }
 
         public virtual ICollection<Drive> Drives { get; set; }
+        public virtual ICollection<Availability> Availabilities { get; set; }
 
 
         // not sure this is how we should store this

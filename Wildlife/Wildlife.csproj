@@ -192,8 +192,25 @@
     <Compile Include="Migrations\202103062246153_Initial.Designer.cs">
       <DependentUpon>202103062246153_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103160554206_availability.cs" />
+    <Compile Include="Migrations\202103160554206_availability.designer.cs">
+      <DependentUpon>202103160554206_availability.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103160558016_availability_update.cs" />
+    <Compile Include="Migrations\202103160558016_availability_update.designer.cs">
+      <DependentUpon>202103160558016_availability_update.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103160600030_availability_update1.cs" />
+    <Compile Include="Migrations\202103160600030_availability_update1.designer.cs">
+      <DependentUpon>202103160600030_availability_update1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103170206530_availability_stuff.cs" />
+    <Compile Include="Migrations\202103170206530_availability_stuff.designer.cs">
+      <DependentUpon>202103170206530_availability_stuff.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Availability.cs" />
     <Compile Include="Models\Drive.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -288,6 +305,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202103062246153_Initial.resx">
       <DependentUpon>202103062246153_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103160554206_availability.resx">
+      <DependentUpon>202103160554206_availability.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103160558016_availability_update.resx">
+      <DependentUpon>202103160558016_availability_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103160600030_availability_update1.resx">
+      <DependentUpon>202103160600030_availability_update1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103170206530_availability_stuff.resx">
+      <DependentUpon>202103170206530_availability_stuff.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

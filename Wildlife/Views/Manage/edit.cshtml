@@ -7,102 +7,323 @@
 
 @using (Html.BeginForm("Edit", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
-<h4>Edit User Info Form</h4>
-<hr />
-@Html.ValidationSummary("", new { @class = "text-danger" })
-@Html.HiddenFor(m => m.OldUserName)
-@*<div class="form-group">
-        @Html.LabelFor(m => m.OldUserName, new { @class = "col-md-2 control-label" })
+    <h4>Edit User Info Form</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.OldUserName)
+
+    var index = 0;
+    foreach (var item in Model.Availabilities)
+    {
+        @Html.HiddenFor(m => m.Availabilities[index].DriverId);
+        @Html.HiddenFor(m => m.Availabilities[index].Dayoftheweek);
+        @Html.HiddenFor(m => m.Availabilities[index].EndTime);
+        @Html.HiddenFor(m => m.Availabilities[index].SlotId);
+        @Html.HiddenFor(m => m.Availabilities[index].StartTime);
+        index++;
+    }
+
+    @*<div class="form-group">
+            @Html.LabelFor(m => m.OldUserName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.OldUserName, new { @class = "form-control" })
+            </div>
+        </div>*@
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewUserName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.OldUserName, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.NewUserName, new { placeholder = @Html.ValueFor(m => m.OldUserName), @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewUserName, "", new { @class = "text-danger" })
+
+
         </div>
-    </div>*@
-<div class="form-group">
-    @Html.LabelFor(m => m.NewUserName, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewUserName, new { placeholder = @Html.ValueFor(m => m.OldUserName), @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewUserName, "", new { @class = "text-danger" })
-
-
     </div>
-</div>
-@*<div class="form-group">
-        @Html.LabelFor(m => m.OldEmail, new { @class = "col-md-2 control-label" })
+    @*<div class="form-group">
+            @Html.LabelFor(m => m.OldEmail, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBox(m => m.OldEmail, new { @class = "form-control" })
+            </div>
+        </div>*@
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewEmail, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBox(m => m.OldEmail, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.NewEmail, new { placeholder = @Html.ValueFor(m => m.OldEmail), @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewEmail, "", new { @class = "text-danger" })
         </div>
-    </div>*@
-<div class="form-group">
-    @Html.LabelFor(m => m.NewEmail, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewEmail, new { placeholder = @Html.ValueFor(m => m.OldEmail), @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewEmail, "", new { @class = "text-danger" })
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewPhoneNumber, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewPhoneNumber, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewPhoneNumber, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewPhoneNumber, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewPhoneNumber, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewPhoneNumber, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewVehicleModel, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewVehicleModel, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewVehicleModel, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewVehicleModel, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewVehicleModel, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewVehicleModel, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewVehicleMake, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewVehicleMake, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewVehicleMake, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewVehicleMake, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewVehicleMake, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewVehicleMake, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
 
-<div class="form-group">
-    @Html.LabelFor(m => m.NewAddressLine1, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewAddressLine1, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewAddressLine1, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewAddressLine1, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewAddressLine1, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewAddressLine1, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewAddressLine2, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewAddressLine2, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewAddressLine2, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewAddressLine2, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewAddressLine2, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewAddressLine2, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewCity, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewCity, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewCity, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewCity, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewCity, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewCity, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewStateProvince, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewStateProvince, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewStateProvince, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewStateProvince, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewStateProvince, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewStateProvince, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
-<div class="form-group">
-    @Html.LabelFor(m => m.NewPostalCode, new { @class = "col-md-2 control-label" })
-    <div class="col-md-10">
-        @Html.TextBoxFor(m => m.NewPostalCode, new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.NewPostalCode, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewPostalCode, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewPostalCode, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewPostalCode, "", new { @class = "text-danger" })
+        </div>
     </div>
-</div>
 
-<div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        <input type="submit" value="Done" class="btn btn-default" />
+    <table class="scheduler" cellspacing="0" cellpadding="0" border="0" width="325">
+        <tr>
+            <td>
+                <table class="fixed-header">
+                    <tr>
+                        <th></th>
+                        <th>Sunday</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="scrollable">
+                    <table id="scheduler" class="body">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class='resizable'>
     </div>
-</div>
+
+    <div class="commands-new-slot">
+        <div class="accept-slot">OK</div>
+        <div class="cancel-slot">Cancel</div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Update" class="btn btn-default" />
+        </div>
+    </div>
 }
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+<script>
+        $(document).ready(function () {
+
+
+       function addTimeSlot(time, value, j) {
+          // create new row
+          var r = document.createElement('tr');
+          if (j % 2 == 0) {
+             $(r).addClass("timeslot-top");
+             $(r).append("<td rowspan=2>" + time + "</td>");
+          }
+          else {
+             $(r).addClass("timeslot-bottom");
+          }
+          for (var i = 0; i < 7; i++) {
+             var d = document.createElement('td');
+             $(d).addClass('not-set');
+             $(d).attr('data-day', i);
+             $(d).attr('data-time', value);
+             $(r).append(d);
+          }
+
+          $(r).appendTo('#scheduler > tbody');
+       }
+
+       //prepare timeslots and build table
+       var quarterHours = ["00", "15", "30", "45"];
+       var v_quarterHours = [0, 0.25, 0.5, 0.75];
+       for (var i = 5; i < 12; i++) {
+          for (var j = 0; j < 4; j++) {
+             var time = i + ":" + quarterHours[j] + " AM";
+             var value = i + v_quarterHours[j];
+             addTimeSlot(time, value, j);
+          }
+       }
+       for (var j = 0; j < 4; j++) {
+          var time = 12 + ":" + quarterHours[j] + " PM";
+          var value = 12 + v_quarterHours[j];
+          addTimeSlot(time, value, j);
+       }
+       for (var i = 1; i <= 8; i++) {
+          for (var j = 0; j < 4; j++) {
+             var time = i + ":" + quarterHours[j] + " PM";
+             var value = i + v_quarterHours[j];
+             addTimeSlot(time, value+12, j);
+          }
+       }
+
+
+
+
+        var availability = [
+        @foreach (var ava in Model.Availabilities) {
+            var intday = (int)ava.Dayoftheweek;
+            <text>
+            {
+                id: @ava.SlotId,
+                day: @intday,
+                time: { start: @ava.StartTime, end: @ava.EndTime}
+            },
+            </text>
+        }
+        ];
+
+
+       // highlight availability
+
+       availability.forEach(function (value) {
+          // find all cells of given date and times between start and end and change color to show availability
+          for (var t = value.time.start; t < value.time.end; t = t + 0.25) {
+             var attr_filter = "td[data-day='" + value.day + "'][data-time='" + t + "']";
+             $(attr_filter).removeClass('not-set').addClass('available').attr("data-id", value.id);
+          }
+       });
+
+       // attach click event on all available slots to remove availability
+       $(document).on("click", '.available', function (e) {
+
+          if (window.confirm("Are you sure you want to delete your availability?")) {
+             var id = $(this).attr("data-id");
+              console.log(id);
+             $("td[data-id='" + id + "']").removeClass('available').addClass('not-set').removeAttr('data-id');
+
+              // TODO post
+               $.ajax({
+                   type: "Get",
+                   url: "/Manage/RemoveFromAvailabilities",
+                   cache: false,
+                   data: { slotId: id },
+                   async: false,
+               });
+          }
+       });
+
+       var resize_in_progress = false;
+       var new_availability = {
+          day: -1,
+          start: -1,
+          end: -1,
+          start_pos: 0,
+          end_pos: 0
+       };
+
+       $(".resizable").mousedown(function(event) {
+          resize_in_progress = true;
+          new_availability.start_pos = event.pageY;
+       })
+
+       $(".resizable").mousemove(function (event) {
+          if (resize_in_progress) {
+             new_availability.end_pos = event.pageY;
+             console.log(new_availability.end_pos);
+          }
+       });
+
+       $(".resizable").mouseup(function () {
+          resize_in_progress = false;
+
+          var moved_slots = Math.round((new_availability.end_pos - new_availability.start_pos) / 20);
+
+          new_availability.end = new_availability.start + moved_slots * 0.25;
+
+          console.log("new availability on day " + new_availability.day + " from " + new_availability.start + " to " + new_availability.end);
+
+       });
+
+       $(".cancel-slot").click(function () {
+          $(".resizable").hide();
+          $('.commands-new-slot').hide();
+       });
+
+            $(".accept-slot").click(function () {
+                console.log(new_availability.end != -1)
+            if (new_availability.end != -1 && new_availability.end - new_availability.start >= .5) { // if moved and moved back to too small
+               $.ajax({
+                   type: "Get",
+                   url: "/Manage/AddToAvailabilities",
+                   cache: false,
+                   data: { UserId: "@ViewBag.UserId", day: new_availability.day, start: new_availability.start, end: new_availability.end },
+                   async: false,
+               });
+
+               // TODO refresh data in schedule or just refresh page cause ez pz
+               location.reload(true)
+               $(".resizable").hide();
+               $('.commands-new-slot').hide();
+           }
+           else {
+               window.alert("Please Select a Minimum of 30 Minutes");
+           }
+       });
+
+       // attach event to create new availability
+       $(document).on("click", '.not-set', function (e) {
+
+          var offset = $(this).offset();
+          var posY = offset.top - $(window).scrollTop();
+          var posX = offset.left - $(window).scrollLeft();
+
+          $(".resizable").css({
+             top: posY,
+             left: posX});
+          $(".resizable").width($(this).width());
+          $(".resizable").height($(this).height());
+          $(".resizable").show();
+          $('.commands-new-slot').show();
+          new_availability.day = $(this).attr('data-day');
+          new_availability.start = parseFloat($(this).attr('data-time'));
+       });
+    });
+</script>
 }

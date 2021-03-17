@@ -19,6 +19,7 @@ namespace Wildlife.Data
         {
         }
 
-        public System.Data.Entity.DbSet<Wildlife.Models.Drive> Drives { get; set; }
+        public DbSet<Wildlife.Models.Drive> Drives { get; set; }
+        public DbSet<Wildlife.Models.Availability> Availabilities { get; set; }
     }
 }

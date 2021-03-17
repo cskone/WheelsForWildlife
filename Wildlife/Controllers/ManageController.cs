@@ -65,11 +65,49 @@ namespace Wildlife.Controllers
             }
         }
 
-        //https://stackoverflow.com/questions/33984530/how-to-update-identitys-manage-controller
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> RemoveFromAvailabilities(int slotId)
+        {
+            // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            user.Availabilities.Remove(user.Availabilities.First(s => s.SlotId == slotId));
+            IdentityResult res = UserManager.Update(user);
+            if (res.Succeeded)
+            {
+                ViewBag.Title = "Success";
+            }
+            else
+            {
+                ViewBag.Title = "Failed";
+            }
+            return View();
+        }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> AddToAvailabilities(string UserId, string day, string start, string end)
+        {
+            // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            user.Availabilities.Add(new Availability(UserId, (DayOfWeek)int.Parse(day), Double.Parse(start), Double.Parse(end)));
+            IdentityResult res = UserManager.Update(user);
+            if (res.Succeeded)
+            {
+                ViewBag.Title = "Success";
+            }
+            else
+            {
+                ViewBag.Title = "Failed";
+            }
+            return View();
+        }
+
+        //https://stackoverflow.com/questions/33984530/how-to-update-identitys-manage-controller
         [HttpGet]
         public async Task<ActionResult> Edit(ManageMessageId? message = null)
         {
+            // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
             var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
             // move entity fields to viewmodel from constructor, automapper, etc.        
             var model = new EditUserInfoViewModel
@@ -91,10 +129,12 @@ namespace Wildlife.Controllers
                 NewAddressLine2 = user.DriverLocation.AddressLine2,
                 NewCity = user.DriverLocation.City,
                 NewStateProvince = user.DriverLocation.StateProvince,
-                NewPostalCode = user.DriverLocation.PostalCode
-                
+                NewPostalCode = user.DriverLocation.PostalCode,
+                Availabilities = user.Availabilities.ToList(),
             };
+            //model.Availabilities.Add(new Availability(1, "54ab16bb-e8b9-4575-b88b-cf71b910cd6c", DayOfWeek.Monday, 10.50, 12.50));
             ViewBag.MessageId = message;
+            ViewBag.UserId = User.Identity.GetUserId();
             return View(model);
         }
 
@@ -121,6 +161,9 @@ namespace Wildlife.Controllers
             user.DriverLocation.City = userEditUserInfoViewModel.NewCity;
             user.DriverLocation.StateProvince = userEditUserInfoViewModel.NewStateProvince;
             user.DriverLocation.PostalCode = userEditUserInfoViewModel.NewPostalCode;
+            user.Availabilities = userEditUserInfoViewModel.Availabilities;
+            //user.Availabilities.Add(new Availability(1, "54ab16bb-e8b9-4575-b88b-cf71b910cd6c", DayOfWeek.Monday, 10.50, 12.50));
+
             /*
             user.DriverLocation.AddressLine1 = userEditUserInfoViewModel.NewAddressLine1;
             user.DriverLocation.AddressLine2 = userEditUserInfoViewModel.NewAddressLine2;
@@ -128,7 +171,6 @@ namespace Wildlife.Controllers
             user.DriverLocation.StateProvince = userEditUserInfoViewModel.NewStateProvince;
             user.DriverLocation.PostalCode = userEditUserInfoViewModel.NewPostalCode;
             */
-
             UserManager.Update(user);
 
             // resigns in for identity refresh 

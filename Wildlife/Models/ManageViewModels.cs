@@ -129,6 +129,9 @@ namespace Wildlife.Models
         [Required]
         [Display(Name = "Zip Code")]
         public string NewPostalCode { get; set; }
+
+        [Display(Name = "Calendar Info")]
+        public List<Availability> Availabilities { get; set; }
     }
     public class DriveInfoViewModel
     {

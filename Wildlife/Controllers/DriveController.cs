@@ -263,7 +263,15 @@ namespace Wildlife.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(driveInfoViewModel.DriverId);
+                var user = await UserManager.FindByIdAsync(driveInfoViewModel.DriverId);
+                if (user != null)
+                {
+                    driveInfoViewModel.DriverId = user.UserName;
+                }
+                else
+                {
+                    driveInfoViewModel.DriverId = null;
+                }
                 if (user != null)
                 {
                     driveInfoViewModel.DriverId = user.Id;
