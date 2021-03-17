@@ -263,22 +263,25 @@ namespace Wildlife.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByIdAsync(driveInfoViewModel.DriverId);
-                if (user != null)
+                if (driveInfoViewModel.DriverId != null)
                 {
-                    driveInfoViewModel.DriverId = user.UserName;
-                }
-                else
-                {
-                    driveInfoViewModel.DriverId = null;
-                }
-                if (user != null)
-                {
-                    driveInfoViewModel.DriverId = user.Id;
-                }
-                else
-                {
-                    driveInfoViewModel.DriverId = null;
+                    var user = await UserManager.FindByNameAsync(driveInfoViewModel.DriverId);
+                    if (user != null)
+                    {
+                        driveInfoViewModel.DriverId = user.UserName;
+                    }
+                    else
+                    {
+                        driveInfoViewModel.DriverId = null;
+                    }
+                    if (user != null)
+                    {
+                        driveInfoViewModel.DriverId = user.Id;
+                    }
+                    else
+                    {
+                        driveInfoViewModel.DriverId = null;
+                    }
                 }
                 CivicAddress startLocation = new CivicAddress(driveInfoViewModel.StartAddressLine1,
                     driveInfoViewModel.StartAddressLine2,
