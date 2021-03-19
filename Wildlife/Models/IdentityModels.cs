@@ -23,6 +23,7 @@ namespace Wildlife.Models
         public string VehicleMake { get; set; }
         public string VehicleModel { get; set; }
 
+
         public int DriveCount { get; set; }     // Total number of drives
         public double DriveHours { get; set; }  // Total hours spent on drives based on function of Drive.DriveStart and Drive.DriveEnd
         public int AnimalCount { get; set; }    // Number of animals transported

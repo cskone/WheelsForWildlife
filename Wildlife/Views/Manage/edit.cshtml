@@ -109,41 +109,38 @@
         </div>
     </div>
 
-    <table class="scheduler" cellspacing="0" cellpadding="0" border="0" width="325">
-        <tr>
-            <td>
-                <table class="fixed-header">
-                    <tr>
-                        <th></th>
-                        <th>Sunday</th>
-                        <th>Monday</th>
-                        <th>Tuesday</th>
-                        <th>Wednesday</th>
-                        <th>Thursday</th>
-                        <th>Friday</th>
-                        <th>Saturday</th>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="scrollable">
-                    <table id="scheduler" class="body">
-                        <tbody>
-                        </tbody>
+    <body>
+        <table class="scheduler" cellspacing="0" cellpadding="0" border="0" width="325">
+            <tr>
+                <td>
+                    <table class="fixed-header">
+                        <tr>
+                            <th></th>
+                            <th>Sunday</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                        </tr>
                     </table>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <div class='resizable'>
-    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="scrollable">
+                        <table id="scheduler" class="body">
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-    <div class="commands-new-slot">
-        <div class="accept-slot">OK</div>
-        <div class="cancel-slot">Cancel</div>
-    </div>
+
+    </body>
 
 
     <div class="form-group">
@@ -156,174 +153,334 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 <script>
-        $(document).ready(function () {
+$(document).ready(function () {
+
+   function timeString(time) {
+
+      time = 60 * time;
+      var hours = Math.floor(time / 60);
+      var minutes = time % 60;
+      return hours + ":" + (minutes < 10 ? '0' : "") + minutes;
+   }
+
+   function addTimeSlot(time, value, j) {
+      // create new row
+      var r = document.createElement('tr');
+      if (j % 2 == 0) {
+         $(r).addClass("timeslot-top");
+         $(r).append("<td rowspan=2>" + time + "</td>");
+      }
+      else {
+         $(r).addClass("timeslot-bottom");
+      }
+      for (var i = 0; i < 7; i++) {
+         var d = document.createElement('td');
+         $(d).addClass('not-set');
+         $(d).attr('data-day', i);
+         $(d).attr('data-time', value);
+         $(r).append(d);
+      }
+
+      $(r).appendTo('#scheduler > tbody');
+   }
+
+   function displayAvailabilityBlock(id, day, start, end) {
+      for (var t = start; t < end; t = t + 0.25) {
+         var attr_filter = "td[data-day='" + day + "'][data-time='" + t + "']";
+         $(attr_filter).removeClass('not-set').addClass('available').attr("data-id", id);
+
+         if (t == start) {
+            $(attr_filter).css({ "border-top": "solid grey 1px" });
+            $(attr_filter).text(timeString(start) + " - " + timeString(end));
+            $(attr_filter).append("<i class='fas fa-trash-alt slot-command delete-availability'></i>");
+         }
+         if (t == end - 0.25) {
+            $(attr_filter).css({ "border-bottom": "solid grey 1px" });
+         }
+      }
+   }
+
+   function updateNewAvailabilityDisplay() {
+      if (edit_availability.top_cell == edit_availability.bottom_cell) {
+         $(edit_availability.top_cell).text(timeString(edit_availability.start) + " - " + timeString(edit_availability.end));
+      }
+      else {
+         $(edit_availability.top_cell).text(timeString(edit_availability.start));
+         $(edit_availability.bottom_cell).text(timeString(edit_availability.end));
+      }
+
+      $(edit_availability.top_cell).addClass('drag-up');
+      $(edit_availability.bottom_cell).addClass('drag-down');
+
+      $(edit_availability.top_cell).append('<span class="slot-command cancel-slot">&#10008;</span><div class="slot-command accept-slot">&#10004;</div>');
+   }
+
+   function cleanupNewAvailability() {
+
+      $('.drag-overlay').removeClass('drag-overlay').removeClass('drag-up').removeClass('drag-down');
+      $(edit_availability.top_cell).text("");
+      $(edit_availability.bottom_cell).text("");
+
+      if (edit_availability.id != -1) {
+         // restore original slot before forgeting all about it
+         displayAvailabilityBlock(edit_availability.id, edit_availability.day, edit_availability.original_start, edit_availability.original_end);
+      }
+
+      edit_availability.id = -1;
+      edit_availability.day = -1;
+      edit_availability.start = -1;
+      edit_availability.end = -1;
+      edit_availability.column_l = -1;
+      edit_availability.column_r = -1;
+      edit_availability.top_cell = null;
+      edit_availability.bottom_cell = null;
+      edit_availability.original_start = -1;
+      edit_availability.original_end = -1;
+
+   }
+
+   var quarterHours = ["00", "15", "30", "45"];
+   var v_quarterHours = [0, 0.25, 0.5, 0.75];
+   for (var i = 5; i < 12; i++) {
+      for (var j = 0; j < 4; j++) {
+         var time = i + ":" + quarterHours[j] + " AM";
+         var value = i + v_quarterHours[j];
+         addTimeSlot(time, value, j);
+      }
+   }
+   for (var j = 0; j < 4; j++) {
+      var time = 12 + ":" + quarterHours[j] + " PM";
+      var value = 12 + v_quarterHours[j];
+      addTimeSlot(time, value, j);
+   }
+   for (var i = 1; i <= 8; i++) {
+      for (var j = 0; j < 4; j++) {
+         var time = i + ":" + quarterHours[j] + " PM";
+         var value = i + v_quarterHours[j];
+         addTimeSlot(time, value + 12, j);
+      }
+   }
+
+    var availability = [
+       @foreach (var ava in Model.Availabilities) {
+                   var intday = (int)ava.Dayoftheweek;
+           <text>
+                       {
+                   id: @ava.SlotId,
+               day: @intday,
+               time: { start: @ava.StartTime, end: @ava.EndTime}
+                   },
+           </text>
+                   }
+       ];
 
 
-       function addTimeSlot(time, value, j) {
-          // create new row
-          var r = document.createElement('tr');
-          if (j % 2 == 0) {
-             $(r).addClass("timeslot-top");
-             $(r).append("<td rowspan=2>" + time + "</td>");
-          }
-          else {
-             $(r).addClass("timeslot-bottom");
-          }
-          for (var i = 0; i < 7; i++) {
-             var d = document.createElement('td');
-             $(d).addClass('not-set');
-             $(d).attr('data-day', i);
-             $(d).attr('data-time', value);
-             $(r).append(d);
-          }
+           // highlight availability
 
-          $(r).appendTo('#scheduler > tbody');
+           availability.forEach(function (value) {
+               // find all cells of given date and times between start and end and change color to show availability
+               displayAvailabilityBlock(value.id, value.day, value.time.start, value.time.end);
+           });
+
+    var resize_in_progress = false;
+    var edit_availability = {
+        id: -1,
+        day: -1,
+        start: -1,
+        end: -1,
+        // those used for display and styling
+        column_l: -1,
+        column_r: -1,
+        top_cell: null,
+        bottom_cell: null,
+        // those for keeping original values while editing
+        original_start: -1,
+        original_end: -1
+
+    };
+
+   // attach event to create new availability
+   $(document).on("mousedown", '.not-set, .available', function (e) {
+           if ($(e.target).hasClass('delete-availability')) {
+               if (window.confirm("Are you sure you want to delete your availability?")) {
+                   var id = $(this).attr("data-id");
+
+                   $("td[data-id='" + id + "']").text("");
+                   $("td[data-id='" + id + "']").removeClass('available').addClass('not-set').removeAttr('data-id').removeAttr('style');
+
+                   $.ajax({
+                       type: "Get",
+                       url: "/Manage/RemoveFromAvailabilities",
+                       cache: false,
+                       data: { slotId: id },
+                       async: false,
+                   });
+
+               }
+               return true;
        }
 
-       //prepare timeslots and build table
-       var quarterHours = ["00", "15", "30", "45"];
-       var v_quarterHours = [0, 0.25, 0.5, 0.75];
-       for (var i = 5; i < 12; i++) {
-          for (var j = 0; j < 4; j++) {
-             var time = i + ":" + quarterHours[j] + " AM";
-             var value = i + v_quarterHours[j];
-             addTimeSlot(time, value, j);
-          }
-       }
-       for (var j = 0; j < 4; j++) {
-          var time = 12 + ":" + quarterHours[j] + " PM";
-          var value = 12 + v_quarterHours[j];
-          addTimeSlot(time, value, j);
-       }
-       for (var i = 1; i <= 8; i++) {
-          for (var j = 0; j < 4; j++) {
-             var time = i + ":" + quarterHours[j] + " PM";
-             var value = i + v_quarterHours[j];
-             addTimeSlot(time, value+12, j);
-          }
-       }
-
-
-
-
-        var availability = [
-        @foreach (var ava in Model.Availabilities) {
-            var intday = (int)ava.Dayoftheweek;
-            <text>
-            {
-                id: @ava.SlotId,
-                day: @intday,
-                time: { start: @ava.StartTime, end: @ava.EndTime}
-            },
-            </text>
-        }
-        ];
-
-
-       // highlight availability
-
-       availability.forEach(function (value) {
-          // find all cells of given date and times between start and end and change color to show availability
-          for (var t = value.time.start; t < value.time.end; t = t + 0.25) {
-             var attr_filter = "td[data-day='" + value.day + "'][data-time='" + t + "']";
-             $(attr_filter).removeClass('not-set').addClass('available').attr("data-id", value.id);
-          }
-       });
-
-       // attach click event on all available slots to remove availability
-       $(document).on("click", '.available', function (e) {
-
-          if (window.confirm("Are you sure you want to delete your availability?")) {
-             var id = $(this).attr("data-id");
-              console.log(id);
-             $("td[data-id='" + id + "']").removeClass('available').addClass('not-set').removeAttr('data-id');
-
-              // TODO post
-               $.ajax({
-                   type: "Get",
-                   url: "/Manage/RemoveFromAvailabilities",
-                   cache: false,
-                   data: { slotId: id },
-                   async: false,
-               });
-          }
-       });
-
-       var resize_in_progress = false;
-       var new_availability = {
-          day: -1,
-          start: -1,
-          end: -1,
-          start_pos: 0,
-          end_pos: 0
-       };
-
-       $(".resizable").mousedown(function(event) {
-          resize_in_progress = true;
-          new_availability.start_pos = event.pageY;
-       })
-
-       $(".resizable").mousemove(function (event) {
-          if (resize_in_progress) {
-             new_availability.end_pos = event.pageY;
-             console.log(new_availability.end_pos);
-          }
-       });
-
-       $(".resizable").mouseup(function () {
-          resize_in_progress = false;
-
-          var moved_slots = Math.round((new_availability.end_pos - new_availability.start_pos) / 20);
-
-          new_availability.end = new_availability.start + moved_slots * 0.25;
-
-          console.log("new availability on day " + new_availability.day + " from " + new_availability.start + " to " + new_availability.end);
-
-       });
-
-       $(".cancel-slot").click(function () {
-          $(".resizable").hide();
-          $('.commands-new-slot').hide();
-       });
-
-            $(".accept-slot").click(function () {
-                console.log(new_availability.end != -1)
-            if (new_availability.end != -1 && new_availability.end - new_availability.start >= .5) { // if moved and moved back to too small
-               $.ajax({
-                   type: "Get",
-                   url: "/Manage/AddToAvailabilities",
-                   cache: false,
-                   data: { UserId: "@ViewBag.UserId", day: new_availability.day, start: new_availability.start, end: new_availability.end },
-                   async: false,
-               });
-
-               // TODO refresh data in schedule or just refresh page cause ez pz
-               location.reload(true)
-               $(".resizable").hide();
-               $('.commands-new-slot').hide();
+           if ($(e.target).hasClass('cancel-slot')) {
+               cleanupNewAvailability();
+               return true;
            }
-           else {
-               window.alert("Please Select a Minimum of 30 Minutes");
+           var id = $(this).attr("data-id");
+
+           if ($(e.target).hasClass('accept-slot')) {
+
+               if (edit_availability.id != -1) {
+                    $.ajax({
+                       type: "Get",
+                       url: "/Manage/EditAvailabilities",
+                       cache: false,
+                       data: { SlotId: id, start: edit_availability.start, end: edit_availability.end },
+                       async: false,
+                    });
+               }
+               else {
+                    $.ajax({
+                       type: "Get",
+                       url: "/Manage/AddToAvailabilities",
+                       cache: false,
+                       data: { UserId: "@ViewBag.UserId", day: edit_availability.day, start: edit_availability.start, end: edit_availability.end },
+                       async: false,
+                    });
+               }
+               cleanupNewAvailability();
+               location.reload(true);
+               return true;
+           }
+
+           if ($(e.target).hasClass('drag-overlay')) {
+               resize_in_progress = true;
+               return true;
+           }
+
+           var offset = $(e.target).offset();
+           var posY = offset.top - $(window).scrollTop();
+           var posX = offset.left - $(window).scrollLeft();
+
+           if (edit_availability.day != -1) {
+               cleanupNewAvailability();
+           }
+
+           resize_in_progress = true;
+
+           if ($(e.target).hasClass('available')) {
+               edit_availability.id = $(e.target).attr("data-id");
+
+               // select all cells with this id
+               var cells = $("td[data-id='" + edit_availability.id + "']").removeClass('available').addClass('not-set').addClass('drag-overlay');
+         $(cells[0]).removeAttr('style');
+         $(cells[cells.length - 1]).removeAttr('style');
+
+
+               edit_availability.day = $(e.target).attr('data-day');
+               edit_availability.start = parseFloat($(cells[0]).attr('data-time'));
+               edit_availability.end = parseFloat($(cells[cells.length - 1]).attr('data-time')) + 0.25;
+               edit_availability.column_l = posX;
+               edit_availability.column_r = posX + $(this).width();
+               edit_availability.top_cell = cells[0];
+               edit_availability.bottom_cell = cells[cells.length - 1];
+
+               edit_availability.original_start = edit_availability.start;
+               edit_availability.original_end = edit_availability.end;
+
+
+           }
+      else {
+               edit_availability.day = $(e.target).attr('data-day');
+               edit_availability.start = parseFloat($(e.target).attr('data-time'));
+               edit_availability.end = edit_availability.start + 0.25;
+               edit_availability.column_l = posX;
+               edit_availability.column_r = posX + $(this).width();
+               edit_availability.top_cell = e.target;
+               edit_availability.bottom_cell = e.target;
+         $(e.target).addClass('drag-overlay');
+           }
+
+           updateNewAvailabilityDisplay();
+
+       });
+
+
+   $(document).on("mousemove", '.not-set', function (e) {
+           e.stopPropagation();
+           if (e.preventDefault) {
+               e.preventDefault();
+           }
+           e.cancelBubble = true;
+           e.returnValue = false;
+           return false;
+       });
+
+   $(document).on("mouseenter", '.not-set', function (e) {
+
+           if (resize_in_progress && e.buttons == 1 && e.button == 0 && edit_availability.column_l <= e.pageX && e.pageX <= edit_availability.column_r) {
+
+               var from_time = parseFloat($(e.relatedTarget).attr('data-time'));
+               var target_time = parseFloat($(e.target).attr('data-time'));
+
+               if (target_time > from_time) {
+                   if (target_time >= edit_availability.end) {
+               // expanding down
+               $(e.relatedTarget).removeClass('drag-down');
+               $(e.target).addClass('drag-overlay');
+                       edit_availability.end = target_time + 0.25;
+               $(edit_availability.bottom_cell).text("");
+                       edit_availability.bottom_cell = e.target;
+                       updateNewAvailabilityDisplay();
+                   }
+                   else {
+               // srinking from top
+               $(e.relatedTarget).removeClass('drag-up').removeClass('drag-overlay');
+               $(e.target).addClass('drag-overlay');
+                       edit_availability.start = target_time;
+               $(edit_availability.top_cell).text("");
+                       edit_availability.top_cell = e.target;
+                       updateNewAvailabilityDisplay();
+                   }
+               }
+               else if (target_time < from_time) {
+                   // we moving mouse up
+                   if (target_time >= edit_availability.start) {
+               // shrincking availability
+               $(e.relatedTarget).removeClass('drag-down').removeClass('drag-overlay');
+               $(e.target).addClass('drag-overlay');
+                       edit_availability.end = target_time + 0.25;
+               $(edit_availability.bottom_cell).text("");
+                       edit_availability.bottom_cell = e.target;
+                       updateNewAvailabilityDisplay();
+                   }
+                   else {
+               // flip start and end
+               $(e.relatedTarget).removeClass('drag-up');
+               $(e.target).addClass('drag-overlay');
+                       edit_availability.start = target_time;
+               $(edit_availability.top_cell).text("");
+                       edit_availability.top_cell = e.target;
+                       updateNewAvailabilityDisplay();
+                   }
+               }
+
+               // because when mouse moves really fast mouseenter events might skip we have to make sure that
+               // all cells in between are marked as drag-overlay
+               var rows = $('.body tr');
+               var row = $(edit_availability.top_cell).parent().parent().children().index($(edit_availability.top_cell).parent());
+               var bottom_row = $(edit_availability.bottom_cell).parent().parent().children().index($(edit_availability.bottom_cell).parent());
+               while (row != bottom_row) {
+                   row++;
+                   rows.eq(row).find("td[data-day=" + edit_availability.day + "]").addClass('drag-overlay');
+               }
+
            }
        });
 
-       // attach event to create new availability
-       $(document).on("click", '.not-set', function (e) {
 
-          var offset = $(this).offset();
-          var posY = offset.top - $(window).scrollTop();
-          var posX = offset.left - $(window).scrollLeft();
-
-          $(".resizable").css({
-             top: posY,
-             left: posX});
-          $(".resizable").width($(this).width());
-          $(".resizable").height($(this).height());
-          $(".resizable").show();
-          $('.commands-new-slot').show();
-          new_availability.day = $(this).attr('data-day');
-          new_availability.start = parseFloat($(this).attr('data-time'));
+   $(document).on("mouseup", '.drag-overlay', function (e) {
+           resize_in_progress = false;
        });
-    });
+
+});
 </script>
 }

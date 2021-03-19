@@ -49,6 +49,12 @@ namespace Wildlife.Models
         {
 
         }
+
+        public void Update(double starttime, double endtime)
+        {
+            StartTime = starttime;
+            EndTime = endtime;
+        }
     }
 
 

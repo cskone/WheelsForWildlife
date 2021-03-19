@@ -86,6 +86,26 @@ namespace Wildlife.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public async Task<ActionResult> EditAvailabilities(int slotId, string start, string end)
+        {
+            // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            Availability ava = user.Availabilities.First(s => s.SlotId == slotId);
+            ava.Update(Double.Parse(start), Double.Parse(end));
+            IdentityResult res = UserManager.Update(user);
+            if (res.Succeeded)
+            {
+                ViewBag.Title = "Success";
+            }
+            else
+            {
+                ViewBag.Title = "Failed";
+            }
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> AddToAvailabilities(string UserId, string day, string start, string end)
         {
             // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
