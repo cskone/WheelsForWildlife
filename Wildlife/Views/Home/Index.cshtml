@@ -1,31 +1,82 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<Wildlife.Models.DriveInfoViewModel>
+
+@if (User.IsInRole("Driver") || (User.IsInRole("Admin")))
+{
+
+    if (ViewBag.setup == true || User.IsInRole("Admin"))
+    {
+
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DriveName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExtraDetails)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DriverId)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr style="border-top:2px solid black;">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DriveName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExtraDetails)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DriverId)
+                    </td>
+                    @if (ViewBag.displayMenu == "Admin")
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, null) |
+                            @Html.ActionLink("Details", "Details", new { id = item.DriveId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.DriveId })
+                        </td>
+                    }
+                    else
+                    {
+                        <td>@Html.ActionLink("Details", "Details", new { id = item.DriveId })</td>
+                    }
+
+                </tr>
+                <tr style="border-bottom:2px solid black;display:contents;width:100%">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartAddressLine1),
+                        @Html.DisplayFor(modelItem => item.StartCity)
+                        @*<h1 style="padding:0px;margin:0;display:inline-block;margin-block-start:0;margin-block-end:0;">
+                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&rArr;
+                            </h1>*@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndAddressLine1)
+                        @Html.DisplayFor(modelItem => item.EndCity)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DriveDistance) miles
+                        @Html.DisplayFor(modelItem => item.DriveDuration) mins
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <h2 style="padding:25px" ;>
+            **You have not set up your account properly! @Html.ActionLink("Update User Info", "Edit", "Manage")**
+        </h2>
+    }
+
 }
-
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
