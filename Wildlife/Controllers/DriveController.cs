@@ -15,6 +15,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Device.Location;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Configuration;
+using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace Wildlife.Controllers
 {
@@ -115,6 +118,7 @@ namespace Wildlife.Controllers
             {
                 return HttpNotFound();
             }
+
             var driveInfoViewModel = new DriveInfoViewModel
             {
                 DriveId = drive.DriveId,
@@ -139,8 +143,17 @@ namespace Wildlife.Controllers
                 EndStateProvince = drive.EndLocation.StateProvince,
 
             };
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
 
-            var user = await UserManager.FindByIdAsync(drive.DriverId);
+            if (User.IsInRole("Driver") && user.DriverLocation.AddressLine1 != null && user.Availabilities.Count() >= 1){
+                ViewBag.ShowTimes = true;
+                Tuple<int, int> driveDetails = CalcDriveDistDurFromUser(user, drive);
+                int userDistance = driveDetails.Item2;
+                int userDuration = driveDetails.Item1;
+                driveInfoViewModel.UserDistance = userDistance * 0.000621371192;
+                driveInfoViewModel.UserDuration = userDuration / 60;
+            }
+
             if (user != null)
             {
                 driveInfoViewModel.DriverId = user.UserName;
@@ -151,6 +164,69 @@ namespace Wildlife.Controllers
             }
 
             return View(driveInfoViewModel);
+        }
+
+        public Tuple<int, int> CalcDriveDistDurFromUser(ApplicationUser usr, Drive drive)
+        {
+            try
+            {
+                int alongroaddis = Convert.ToInt32(ConfigurationManager.AppSettings["alongroad"].ToString());
+                string keyString = ConfigurationManager.AppSettings["keyString"].ToString(); // passing API key
+                string clientID = ConfigurationManager.AppSettings["clientID"].ToString();
+                string driveStartLoc = drive.StartLocation.AddressLine1 + ","
+                    + drive.StartLocation.City + ","
+                    + drive.StartLocation.StateProvince + ","
+                    + drive.StartLocation.PostalCode;
+
+                string UserLoc = usr.DriverLocation.AddressLine1 + ","
+                + usr.DriverLocation.City + ","
+                + usr.DriverLocation.StateProvince + ","
+                + usr.DriverLocation.PostalCode;
+
+                string ApiURL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+                // &departure_time=now for traffic (maybe can be used now with the improved algo)
+                string p = "units=imperial=now&origins=" + UserLoc + "&destinations=" + driveStartLoc + "&mode=Driving";
+                string urlRequest = ApiURL + p;
+                urlRequest += "&key=" + keyString;
+                //if (keyString.ToString() != "")
+                //{
+                //    urlRequest += "&client=" + clientID;
+                //    urlRequest = Sign(urlRequest, keyString); // request with api key and client id
+                //}
+                WebRequest request = WebRequest.Create(urlRequest);
+                request.Method = "POST";
+                string postData = "This is a test that posts this string to a Web server.";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string resp = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+                //string resp = ""{\n   \"destination_addresses\" : [ \"1 Aloha Tower Dr, Honolulu, HI 96813, USA\" ],\n   \"origin_addresses\" : [ \"830 Lokahi St, Honolulu, HI 96826, USA\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"3.0 mi\",\n                  \"value\" : 4856\n               },\n               \"duration\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 711\n               },\n               \"duration_in_traffic\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 704\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n"";
+
+
+                JObject values = JObject.Parse(resp);
+                if (!((string)values["rows"][0]["elements"][0]["status"] == "ZERO_RESULTS"))
+                {
+                    var duration = (string)values["rows"][0]["elements"][0]["duration"]["value"];
+                    var distance = (string)values["rows"][0]["elements"][0]["distance"]["value"];
+                    return Tuple.Create(Int32.Parse(duration), Int32.Parse(distance));
+                    //return Tuple.Create(values[], values[1]);
+                }
+                return Tuple.Create(-1, -1);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         // GET: Drives/Create

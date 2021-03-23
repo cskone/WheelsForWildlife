@@ -206,6 +206,14 @@ namespace Wildlife.Models
         [Display(Name = "Duration")]
         [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
         public decimal DriveDuration { get; set; }
+
+        [Display(Name = "Distance From You")]
+        [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
+        public double UserDistance { get; set; }
+
+        [Display(Name = "Travel Time to Drive Pickup")]
+        [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
+        public decimal UserDuration { get; set; }
     }
 
     public class AddPhoneNumberViewModel

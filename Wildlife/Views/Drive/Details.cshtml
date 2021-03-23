@@ -146,6 +146,24 @@
         <dd>
             @Html.DisplayFor(model => model.DriveDuration) mins
         </dd>
+        @if (ViewBag.ShowTimes == true)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.UserDistance)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UserDistance) miles
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.UserDuration)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.UserDuration) mins
+            </dd>
+        }
     </dl>
 </div>
 <p>
