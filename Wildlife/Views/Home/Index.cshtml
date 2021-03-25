@@ -39,13 +39,13 @@
                     {
                         <td>
                             @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, null) |
-                            @Html.ActionLink("Details", "Details", new { id = item.DriveId }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.DriveId })
+                            @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, null) |
+                            @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, null)
                         </td>
                     }
                     else
                     {
-                        <td>@Html.ActionLink("Details", "Details", new { id = item.DriveId })</td>
+                        <td>@Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, null)</td>
                     }
 
                 </tr>
