@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Wildlife.Models.UserInfoViewModel>
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Register New User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+</p>
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name or phone number: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr style="border-top:2px solid black;">
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.PhoneNumber)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.User.Id })
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { id = item.User.Id })
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditAdmin", new { id = item.User.Id })
+            </td>
+        </tr>
+    }
+</table>

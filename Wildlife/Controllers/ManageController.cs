@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 using System.Device.Location;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Wildlife.Models;
@@ -18,7 +22,7 @@ namespace Wildlife.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        private ApplicationDbContext db = new ApplicationDbContext();
         public class UserUpdateViewModel
         {
             [Required]
@@ -484,7 +488,130 @@ namespace Wildlife.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        [CustomAuthorize(Roles = "Admin")]
+        public ActionResult UserManagement(string searchString)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = User.Identity;
+                ViewBag.Name = user.Name;
+            }
+            else
+            {
+                ViewBag.Name = "Not Logged In";
+            }
+            var users = from u in db.Users select u;
+            List<UserInfoViewModel> userInfoViewModels = new List<UserInfoViewModel>();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                foreach (var user in users.Where(u => u.UserName.Contains(searchString) || u.PhoneNumber.Contains(searchString)))
+                {
+                    var userInfoViewModel = new UserInfoViewModel
+                    {
+                        User = user
+                    };
+                    userInfoViewModels.Add(userInfoViewModel);
+                }
+            }
+            else
+            {
+                foreach (var user in users)
+                {
+                    var userInfoViewModel = new UserInfoViewModel
+                    {
+                        User = user
+                    };
+                    userInfoViewModels.Add(userInfoViewModel);
+                }
+            }
+            return View(userInfoViewModels);
+        }
+
+        // GET: manage/Details
+        [CustomAuthorize(Roles = "Admin")]
+        public async Task<ActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            var userInfoViewModel = new UserInfoViewModel
+            {
+                User = user
+            };
+
+            return View(userInfoViewModel);
+        }
+
+        [CustomAuthorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<ActionResult> EditAdmin(string id)
+        {
+            ViewBag.Name = new SelectList(db.Roles.ToList(), "Name", "Name");
+            var user = await UserManager.FindByIdAsync(id);
+            // move entity fields to viewmodel from constructor, automapper, etc.
+            List<string> roles = new List<string>();
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+            foreach (var x in user.Roles)
+            {
+                roles.Add(roleManager.FindByIdAsync(x.RoleId).Result.Name);
+            }
+            if (roles.Count >= 1)
+            {
+                ViewBag.Name = new SelectList(db.Roles.ToList(), "Name", "Name", roles[0]);
+            }
+            else
+            {
+                roles.Add("");
+            }
+
+            var model = new EditAdminUserInfoViewModel
+            {
+                OldUserRole = roles[0],
+                OldUserName = user.UserName,
+                OldEmail = user.Email,
+
+                NewUserRole = roles[0],
+                NewUserName = user.UserName,
+                NewEmail = user.Email,
+            };
+            //ViewBag.MessageId = message;
+            return View(model);
+        }
+        [CustomAuthorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult> EditAdmin(EditAdminUserInfoViewModel userEditAdminUserInfoViewModel)
+        {
+            if (!ModelState.IsValid) return View(userEditAdminUserInfoViewModel);
+
+            // test random stuff
+            //Random generator = new Random();
+            //Int32.Parse(generator.Next(0, 1000000).ToString("D6"));
+
+            var user = await UserManager.FindByNameAsync(userEditAdminUserInfoViewModel.OldUserName);
+            user.UserName = userEditAdminUserInfoViewModel.NewUserName;
+            user.Email = userEditAdminUserInfoViewModel.NewEmail;
+            if (userEditAdminUserInfoViewModel.OldUserRole != null)
+            {
+                UserManager.RemoveFromRole(user.Id, userEditAdminUserInfoViewModel.OldUserRole);
+            }
+            UserManager.AddToRole(user.Id, userEditAdminUserInfoViewModel.NewUserRole);
+            UserManager.Update(user);
+
+            // resigns in for identity refresh 
+
+            //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+            return RedirectToAction("UserManagement", "Manage", new { Message = "Updated!" });
+        }
+
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 

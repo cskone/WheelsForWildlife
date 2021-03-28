@@ -68,6 +68,42 @@ namespace Wildlife.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class UserInfoViewModel
+    {
+        public ApplicationUser User { get; set; }
+    }
+
+    public class EditAdminUserInfoViewModel
+    {
+        [Display(Name = "Old User Role")]
+        public string OldUserRole { get; set; }
+
+        [Required]
+        [Display(Name = "User Role")]
+        public string NewUserRole { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Old Email")]
+        public string OldEmail { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string NewEmail { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Old UserName")]
+        public string OldUserName { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        [EmailAddress]
+        [Display(Name = "UserName")]
+        public string NewUserName { get; set; }
+
+    }
     public class EditUserInfoViewModel
     {
         [DataType(DataType.EmailAddress)]

@@ -297,6 +297,9 @@
     <Content Include="Views\Drive\Details.cshtml" />
     <Content Include="Views\Drive\Edit.cshtml" />
     <Content Include="Views\Drive\Index.cshtml" />
+    <Content Include="Views\Manage\UserManagement.cshtml" />
+    <Content Include="Views\Manage\Details.cshtml" />
+    <Content Include="Views\Manage\EditAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
