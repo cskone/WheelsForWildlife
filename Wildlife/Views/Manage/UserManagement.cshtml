@@ -6,14 +6,14 @@
 
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Register New User", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
-</p>
+
 @using (Html.BeginForm())
 {
-    <p>
-        Find by name or phone number: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
+    <h4>Find by name or phone number:</h4>
+    <p class="form-inline">
+        @Html.TextBox("SearchString", "", new { @class = "form-control" })
+        <input type="submit" value="Search" class="btn btn-default" />
+        @Html.ActionLink("Register New User", "Register", "Account", routeValues: null, htmlAttributes: new { @class = "btn btn-default", @style = "float:right" })
     </p>
 }
 <table class="table">
@@ -26,6 +26,13 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </th>
+        @* pay no attention to these they are for spacing *@
+        <th>
+        </th>
+        <th>
+        </th>
+        <th>
         </th>
     </tr>
     @foreach (var item in Model)

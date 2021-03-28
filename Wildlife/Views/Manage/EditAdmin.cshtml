@@ -1,7 +1,11 @@
 ﻿@model Wildlife.Models.EditAdminUserInfoViewModel
 @{
     ViewBag.Title = "Edit User Info";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
+
+<h2>@ViewBag.Title.</h2>
 
 @using (Html.BeginForm("EditAdmin", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
