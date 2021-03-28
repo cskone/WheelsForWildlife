@@ -1,0 +1,78 @@
+﻿@model Wildlife.Models.UserInfoViewModel
+
+@{
+    ViewBag.Title = "User Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.DriverLocation.AddressLine1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.DriverLocation.AddressLine1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.DriverLocation.AddressLine2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.DriverLocation.AddressLine2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.DriverLocation.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.DriverLocation.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.DriverLocation.StateProvince)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.DriverLocation.StateProvince)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.DriverLocation.PostalCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.DriverLocation.PostalCode)
+        </dd>
+    </dl>
+</div>

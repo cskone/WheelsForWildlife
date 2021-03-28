@@ -39,16 +39,25 @@ namespace Wildlife
 
                 var chkUser = UserManager.Create(user, userPWD);
                 
-                if (chkUser.Succeeded) { var result1 = UserManager.AddToRole(user.Id, "Admin"); }
+                if (chkUser.Succeeded) 
+                { 
+                    UserManager.AddToRole(user.Id, "Admin"); 
+                }
+
             }
             // Creates Driver Role
             if(!roleManager.RoleExists("Driver"))
             {
-                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                var role = new IdentityRole();
                 role.Name = "Driver";
                 roleManager.Create(role);
             }
-
+            if (!roleManager.RoleExists("Inactive"))
+            {
+                var role = new IdentityRole();
+                role.Name = "Inactive";
+                roleManager.Create(role);
+            }
         }
     }
 }
