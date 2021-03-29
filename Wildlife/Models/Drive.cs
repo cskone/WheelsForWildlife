@@ -116,7 +116,7 @@ namespace Wildlife.Models
 
 
                 JObject values = JObject.Parse(resp);
-                if (!((string)values["rows"][0]["elements"][0]["status"] == "ZERO_RESULTS"))
+                if (!((string)values["rows"][0]["elements"][0]["status"] == "ZERO_RESULTS" || (string)values["rows"][0]["elements"][0]["status"] == "NOT_FOUND"))
                 {
                     var duration = (string)values["rows"][0]["elements"][0]["duration"]["value"];
                     var distance = (string)values["rows"][0]["elements"][0]["distance"]["value"];

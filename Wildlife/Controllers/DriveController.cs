@@ -18,6 +18,12 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Configuration;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using Twilio.Clients;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System.Web.UI.WebControls;
 
 namespace Wildlife.Controllers
 {
@@ -25,6 +31,7 @@ namespace Wildlife.Controllers
     {
         private DriveContext db = new DriveContext();
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext udb = new ApplicationDbContext();
 
         public Boolean isAdminUser()
         {
@@ -183,33 +190,33 @@ namespace Wildlife.Controllers
                 + usr.DriverLocation.StateProvince + ","
                 + usr.DriverLocation.PostalCode;
 
-                string ApiURL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
-                // &departure_time=now for traffic (maybe can be used now with the improved algo)
-                string p = "units=imperial=now&origins=" + UserLoc + "&destinations=" + driveStartLoc + "&mode=Driving";
-                string urlRequest = ApiURL + p;
-                urlRequest += "&key=" + keyString;
-                //if (keyString.ToString() != "")
-                //{
-                //    urlRequest += "&client=" + clientID;
-                //    urlRequest = Sign(urlRequest, keyString); // request with api key and client id
-                //}
-                WebRequest request = WebRequest.Create(urlRequest);
-                request.Method = "POST";
-                string postData = "This is a test that posts this string to a Web server.";
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = byteArray.Length;
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
-                WebResponse response = request.GetResponse();
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string resp = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-                //string resp = ""{\n   \"destination_addresses\" : [ \"1 Aloha Tower Dr, Honolulu, HI 96813, USA\" ],\n   \"origin_addresses\" : [ \"830 Lokahi St, Honolulu, HI 96826, USA\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"3.0 mi\",\n                  \"value\" : 4856\n               },\n               \"duration\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 711\n               },\n               \"duration_in_traffic\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 704\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n"";
+                //string ApiURL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+                //// &departure_time=now for traffic (maybe can be used now with the improved algo)
+                //string p = "units=imperial=now&origins=" + UserLoc + "&destinations=" + driveStartLoc + "&mode=Driving";
+                //string urlRequest = ApiURL + p;
+                //urlRequest += "&key=" + keyString;
+                ////if (keyString.ToString() != "")
+                ////{
+                ////    urlRequest += "&client=" + clientID;
+                ////    urlRequest = Sign(urlRequest, keyString); // request with api key and client id
+                ////}
+                //WebRequest request = WebRequest.Create(urlRequest);
+                //request.Method = "POST";
+                //string postData = "This is a test that posts this string to a Web server.";
+                //byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                //request.ContentType = "application/x-www-form-urlencoded";
+                //request.ContentLength = byteArray.Length;
+                //Stream dataStream = request.GetRequestStream();
+                //dataStream.Write(byteArray, 0, byteArray.Length);
+                //dataStream.Close();
+                //WebResponse response = request.GetResponse();
+                //dataStream = response.GetResponseStream();
+                //StreamReader reader = new StreamReader(dataStream);
+                //string resp = reader.ReadToEnd();
+                //reader.Close();
+                //dataStream.Close();
+                //response.Close();
+                string resp = "{\n   \"destination_addresses\" : [ \"1 Aloha Tower Dr, Honolulu, HI 96813, USA\" ],\n   \"origin_addresses\" : [ \"830 Lokahi St, Honolulu, HI 96826, USA\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"3.0 mi\",\n                  \"value\" : 4856\n               },\n               \"duration\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 711\n               },\n               \"duration_in_traffic\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 704\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n";
 
 
                 JObject values = JObject.Parse(resp);
@@ -272,11 +279,66 @@ namespace Wildlife.Controllers
                     driveInfoViewModel.EndStateProvince);
                 Drive drive = new Drive(driveInfoViewModel.DriveName, driveInfoViewModel.ExtraDetails,startLocation, endLocation, driveInfoViewModel.DriverId);
                 db.Drives.Add(drive);
+
+                var users = from u in udb.Users select u;
+                var usersToNotify = new List<ApplicationUser>();
+
+                // for each user, go through availabilities where the day is the same, the start time is before now, the endtime is after now + drive time
+                foreach (var z in users) {
+                    var y = z.Availabilities;
+                    foreach (var x in z.Availabilities.Where(a => a.Dayoftheweek == DateTime.Now.DayOfWeek && a.StartTime <= DateTime.Now.Hour && a.EndTime >= (double)(DateTime.Now.Hour + (driveInfoViewModel.DriveDuration / 60))))
+                    {
+                        usersToNotify.Add(z);
+                    }
+                }
+
                 await db.SaveChangesAsync();
+                List<Drive> drives = await db.Drives.ToListAsync();
+                await SendEmailAsync(usersToNotify, drives.Last());
+
                 return RedirectToAction("Index");
             }
 
             return View(driveInfoViewModel);
+        }
+
+        // half broken i dunno, also kinda expensive, and needs to verify phone number to be countrycode + phonenumber
+        public void SendTextMsg(List<ApplicationUser> users)
+        {
+            string AccountSid = "ACc2b05b3b84b6739a3a2ef068c21352e1";
+            string AuthToken = "bc1428ec7c9aba9ff97476ff9a15d270";
+
+            TwilioClient.Init(AccountSid, AuthToken);
+
+            foreach (var x in users)
+            {
+                var message = MessageResource.Create(
+                body: "Hi there!",
+                from: new Twilio.Types.PhoneNumber("+17164188033"),
+                to: new Twilio.Types.PhoneNumber(x.PhoneNumber)
+                );
+
+                Console.WriteLine(message.Sid);
+            }
+
+        }
+
+        public async Task SendEmailAsync(List<ApplicationUser> users, Drive drive)
+        {
+            var apiKey = "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";
+            var client = new SendGridClient(apiKey);
+            // need to verify this email like noreply@wildlifecenter.org or whatever
+            var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
+            var subject = "A New Drive is Available!";
+            var plainTextContent = drive.DriveName + " is available now!";
+            var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
+                "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
+
+            foreach (var x in users) {
+                var to = new EmailAddress(x.Email, "NameGoesHere");
+                var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                var response = await client.SendEmailAsync(msg);
+            }
         }
 
 
