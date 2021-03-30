@@ -24,6 +24,11 @@ using Twilio.Rest.Api.V2010.Account;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using System.Globalization;
+using System.Security.Claims;
+using Microsoft.Owin.Security;
+
 
 namespace Wildlife.Controllers
 {
@@ -53,6 +58,7 @@ namespace Wildlife.Controllers
             return false;
         }
 
+        [CustomAuthorize(Roles = "Admin")]
         // GET: Drives
         public async Task<ActionResult> Index()
         {
@@ -114,6 +120,7 @@ namespace Wildlife.Controllers
         }
 
         // GET: Drives/Details/5
+        [HttpGet]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -161,6 +168,7 @@ namespace Wildlife.Controllers
                 driveInfoViewModel.UserDuration = userDuration / 60;
             }
 
+            user = await UserManager.FindByIdAsync(drive.DriverId);
             if (user != null)
             {
                 driveInfoViewModel.DriverId = user.UserName;
@@ -190,33 +198,33 @@ namespace Wildlife.Controllers
                 + usr.DriverLocation.StateProvince + ","
                 + usr.DriverLocation.PostalCode;
 
-                //string ApiURL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
-                //// &departure_time=now for traffic (maybe can be used now with the improved algo)
-                //string p = "units=imperial=now&origins=" + UserLoc + "&destinations=" + driveStartLoc + "&mode=Driving";
-                //string urlRequest = ApiURL + p;
-                //urlRequest += "&key=" + keyString;
-                ////if (keyString.ToString() != "")
-                ////{
-                ////    urlRequest += "&client=" + clientID;
-                ////    urlRequest = Sign(urlRequest, keyString); // request with api key and client id
-                ////}
-                //WebRequest request = WebRequest.Create(urlRequest);
-                //request.Method = "POST";
-                //string postData = "This is a test that posts this string to a Web server.";
-                //byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                //request.ContentType = "application/x-www-form-urlencoded";
-                //request.ContentLength = byteArray.Length;
-                //Stream dataStream = request.GetRequestStream();
-                //dataStream.Write(byteArray, 0, byteArray.Length);
-                //dataStream.Close();
-                //WebResponse response = request.GetResponse();
-                //dataStream = response.GetResponseStream();
-                //StreamReader reader = new StreamReader(dataStream);
-                //string resp = reader.ReadToEnd();
-                //reader.Close();
-                //dataStream.Close();
-                //response.Close();
-                string resp = "{\n   \"destination_addresses\" : [ \"1 Aloha Tower Dr, Honolulu, HI 96813, USA\" ],\n   \"origin_addresses\" : [ \"830 Lokahi St, Honolulu, HI 96826, USA\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"3.0 mi\",\n                  \"value\" : 4856\n               },\n               \"duration\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 711\n               },\n               \"duration_in_traffic\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 704\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n";
+                string ApiURL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
+                // &departure_time=now for traffic (maybe can be used now with the improved algo)
+                string p = "units=imperial=now&origins=" + UserLoc + "&destinations=" + driveStartLoc + "&mode=Driving";
+                string urlRequest = ApiURL + p;
+                urlRequest += "&key=" + keyString;
+                //if (keyString.ToString() != "")
+                //{
+                //    urlRequest += "&client=" + clientID;
+                //    urlRequest = Sign(urlRequest, keyString); // request with api key and client id
+                //}
+                WebRequest request = WebRequest.Create(urlRequest);
+                request.Method = "POST";
+                string postData = "This is a test that posts this string to a Web server.";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string resp = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+                //string resp = "{\n   \"destination_addresses\" : [ \"1 Aloha Tower Dr, Honolulu, HI 96813, USA\" ],\n   \"origin_addresses\" : [ \"830 Lokahi St, Honolulu, HI 96826, USA\" ],\n   \"rows\" : [\n      {\n         \"elements\" : [\n            {\n               \"distance\" : {\n                  \"text\" : \"3.0 mi\",\n                  \"value\" : 4856\n               },\n               \"duration\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 711\n               },\n               \"duration_in_traffic\" : {\n                  \"text\" : \"12 mins\",\n                  \"value\" : 704\n               },\n               \"status\" : \"OK\"\n            }\n         ]\n      }\n   ],\n   \"status\" : \"OK\"\n}\n";
 
 
                 JObject values = JObject.Parse(resp);
@@ -236,6 +244,18 @@ namespace Wildlife.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Details(int id)
+        {
+            var drive = db.Drives.ToList().Find(d => d.DriveId == id);
+            if (drive.DriverId == null)
+            {
+                drive.DriverId = User.Identity.GetUserId();
+                db.Entry(drive).State = EntityState.Modified;
+                _ = await db.SaveChangesAsync();
+            }
+            return RedirectToAction("Details");
+        }
         // GET: Drives/Create
         [CustomAuthorize(Roles = "Admin")]
         public ActionResult Create()
@@ -282,13 +302,20 @@ namespace Wildlife.Controllers
 
                 var users = from u in udb.Users select u;
                 var usersToNotify = new List<ApplicationUser>();
-
+                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(udb));
                 // for each user, go through availabilities where the day is the same, the start time is before now, the endtime is after now + drive time
                 foreach (var z in users) {
-                    var y = z.Availabilities;
                     foreach (var x in z.Availabilities.Where(a => a.Dayoftheweek == DateTime.Now.DayOfWeek && a.StartTime <= DateTime.Now.Hour && a.EndTime >= (double)(DateTime.Now.Hour + (driveInfoViewModel.DriveDuration / 60))))
                     {
-                        usersToNotify.Add(z);
+                        string role = "";
+                        foreach (var y in z.Roles)
+                        {
+                            role = roleManager.FindByIdAsync(y.RoleId).Result.Name;
+                        }
+                        if (role != "Inactive")
+                        {
+                            usersToNotify.Add(z);
+                        }
                     }
                 }
 
@@ -330,17 +357,56 @@ namespace Wildlife.Controllers
             // need to verify this email like noreply@wildlifecenter.org or whatever
             var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
             var subject = "A New Drive is Available!";
-            var plainTextContent = drive.DriveName + " is available now!";
-            var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
-                "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
+            //var plainTextContent = drive.DriveName + " is available now!";
+            //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
+            //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
 
+            //var templateId = { "Sender_Name" :  }
             foreach (var x in users) {
                 var to = new EmailAddress(x.Email, "NameGoesHere");
-                var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+                var msg = MailHelper.CreateSingleTemplateEmail(from, to, "d-2e5fce8502b04f44bd0860a0b31050fc", new NotifEmail()
+                {
+                    Sender_Name = "Wheels For Wildlife",
+                    Sender_Address = "53 Lighthouse Rd Box 551752",
+                    Sender_City = "Kapaau",
+                    Sender_State = "HI",
+                    Sender_Zip = "96755",
+                    Text = drive.DriveName + " is available now!",
+                    Url = "https://localhost:44361/Drive/Details/" + drive.DriveId,
+                    driveName = drive.DriveName
+                });
                 var response = await client.SendEmailAsync(msg);
             }
         }
 
+        private class NotifEmail
+        {
+            [JsonProperty("Sender_Name")]
+            public string Sender_Name { get; set; }
+
+            [JsonProperty("Sender_Address")]
+            public string Sender_Address { get; set; }
+
+            [JsonProperty("Sender_City")]
+            public string Sender_City { get; set; }
+
+            [JsonProperty("Sender_State")]
+            public string Sender_State { get; set; }
+
+
+            [JsonProperty("Sender_Zip")]
+            public string Sender_Zip { get; set; }
+
+            [JsonProperty("url")]
+            public string Url { get; set; }
+
+
+            [JsonProperty("text")]
+            public string Text { get; set; }
+
+            [JsonProperty("driveName")]
+            public string driveName { get; set; }
+        }
 
         // TODO: check if addresses changed, and if so recalc drive dur and dist
         // GET: Drives/Edit/5
@@ -395,6 +461,7 @@ namespace Wildlife.Controllers
         // POST: Drives/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [CustomAuthorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(DriveInfoViewModel driveInfoViewModel)
@@ -466,6 +533,7 @@ namespace Wildlife.Controllers
         // POST: Drives/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Drive drive = await db.Drives.FindAsync(id);

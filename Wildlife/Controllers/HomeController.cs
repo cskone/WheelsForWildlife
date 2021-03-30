@@ -43,50 +43,54 @@ namespace Wildlife.Controllers
             List<DriveInfoViewModel> driveInfoViewModels = new List<DriveInfoViewModel>();
             foreach (var drive in drives)
             {
-                var driveInfoViewModel = new DriveInfoViewModel
+                if (drive.DriverId == User.Identity.GetUserId() || drive.DriverId == null || User.IsInRole("Admin"))
                 {
-                    DriveId = drive.DriveId,
-                    DriveName = drive.DriveName,
-                    ExtraDetails = drive.ExtraDetails,
-                    DriverId = drive.DriverId,
-                    DriveDistance = (double)drive.DriveDistance * 0.000621371192,
-                    DriveDuration = drive.DriveDuration / 60,
+                    var driveInfoViewModel = new DriveInfoViewModel
+                    {
+                        DriveId = drive.DriveId,
+                        DriveName = drive.DriveName,
+                        ExtraDetails = drive.ExtraDetails,
+                        DriverId = drive.DriverId,
+                        DriveDistance = (double)drive.DriveDistance * 0.000621371192,
+                        DriveDuration = drive.DriveDuration / 60,
 
-                    StartAddressLine1 = drive.StartLocation.AddressLine1,
-                    StartAddressLine2 = drive.StartLocation.AddressLine2,
-                    StartCity = drive.StartLocation.City,
-                    StartCountryRegion = drive.StartLocation.CountryRegion,
-                    StartPostalCode = drive.StartLocation.PostalCode,
-                    StartStateProvince = drive.StartLocation.StateProvince,
+                        StartAddressLine1 = drive.StartLocation.AddressLine1,
+                        StartAddressLine2 = drive.StartLocation.AddressLine2,
+                        StartCity = drive.StartLocation.City,
+                        StartCountryRegion = drive.StartLocation.CountryRegion,
+                        StartPostalCode = drive.StartLocation.PostalCode,
+                        StartStateProvince = drive.StartLocation.StateProvince,
 
-                    EndAddressLine1 = drive.EndLocation.AddressLine1,
-                    EndAddressLine2 = drive.EndLocation.AddressLine2,
-                    EndCity = drive.EndLocation.City,
-                    EndCountryRegion = drive.EndLocation.CountryRegion,
-                    EndPostalCode = drive.EndLocation.PostalCode,
-                    EndStateProvince = drive.EndLocation.StateProvince,
+                        EndAddressLine1 = drive.EndLocation.AddressLine1,
+                        EndAddressLine2 = drive.EndLocation.AddressLine2,
+                        EndCity = drive.EndLocation.City,
+                        EndCountryRegion = drive.EndLocation.CountryRegion,
+                        EndPostalCode = drive.EndLocation.PostalCode,
+                        EndStateProvince = drive.EndLocation.StateProvince,
 
-                };
-                var user = await UserManager.FindByIdAsync(drive.DriverId);
-                if (user != null)
-                {
-                    driveInfoViewModel.DriverId = user.UserName;
+                    };
+                    var user = await UserManager.FindByIdAsync(drive.DriverId);
+                    if (user != null)
+                    {
+                        driveInfoViewModel.DriverId = user.UserName;
+                    }
+                    else
+                    {
+                        driveInfoViewModel.DriverId = null;
+                    }
+                    user = await UserManager.FindByNameAsync(User.Identity.Name);
+                    if (user != null && user.PhoneNumber != null && user.Availabilities.Count() >= 1)
+                    {
+                        ViewBag.setup = true;
+                    }
+                    else
+                    {
+                        ViewBag.setup = false;
+                    }
+                    driveInfoViewModels.Add(driveInfoViewModel);
                 }
-                else
-                {
-                    driveInfoViewModel.DriverId = null;
-                }
-                user = await UserManager.FindByNameAsync(User.Identity.Name);
-                if(user != null && user.PhoneNumber!=null && user.Availabilities.Count() >= 1)
-                {
-                    ViewBag.setup = true;
-                }
-                else
-                {
-                    ViewBag.setup = false;
-                }
-                driveInfoViewModels.Add(driveInfoViewModel);
             }
+            driveInfoViewModels = driveInfoViewModels.OrderByDescending(d => d.DriverId).ToList();
             return View(driveInfoViewModels);
         }
         public Boolean isAdminUser()
