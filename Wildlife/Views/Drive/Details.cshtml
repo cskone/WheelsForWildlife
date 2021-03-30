@@ -165,9 +165,32 @@
                 @Html.DisplayFor(model => model.UserDuration) mins
             </dd>
         }
+
     </dl>
 </div>
 <p>
+    @if (User.IsInRole("Driver"))
+    {
+        using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="form-group">
+                <div>
+                    <input type="submit" value="Accept Drive!" class="btn btn-default" />
+                    @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
+
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        @Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
+        <br />
+        <br />
+        @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })
+    }
+</p>
+<p>
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.DriveId }) |*@
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    @*@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })*@
 </p>
