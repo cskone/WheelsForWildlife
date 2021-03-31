@@ -356,7 +356,6 @@ namespace Wildlife.Controllers
             var client = new SendGridClient(apiKey);
             // need to verify this email like noreply@wildlifecenter.org or whatever
             var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
-            var subject = "A New Drive is Available!";
             //var plainTextContent = drive.DriveName + " is available now!";
             //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
             //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
@@ -505,7 +504,7 @@ namespace Wildlife.Controllers
                 drive.DriverId = driveInfoViewModel.DriverId;
                 drive.StartLocation = startLocation;
                 drive.EndLocation = endLocation;
-                drive.ExtraDetails = drive.ExtraDetails;
+                drive.ExtraDetails = driveInfoViewModel.ExtraDetails;
 
                 db.Entry(drive).State = EntityState.Modified;
                 _ = await db.SaveChangesAsync();
