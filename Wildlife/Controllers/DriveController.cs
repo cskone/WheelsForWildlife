@@ -254,6 +254,11 @@ namespace Wildlife.Controllers
                 db.Entry(drive).State = EntityState.Modified;
                 _ = await db.SaveChangesAsync();
             }
+            else if(drive.DriverId == User.Identity.GetUserId())
+            {
+                //mark drive as done here :)
+                ;
+            }
             return RedirectToAction("Details");
         }
         // GET: Drives/Create
