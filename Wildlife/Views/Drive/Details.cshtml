@@ -171,15 +171,32 @@
 <p>
     @if (User.IsInRole("Driver"))
     {
-        using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        if (Model.DriverId == null)
         {
-            <div class="form-group">
-                <div>
-                    <input type="submit" value="Accept Drive!" class="btn btn-default" />
-                    @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
 
+            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="form-group">
+                    <div>
+                        <input type="submit" value="Accept Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
+                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
+
+                    </div>
                 </div>
-            </div>
+            }
+        }
+        else if(Model.DriverId == User.Identity.Name)
+        {
+            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="form-group">
+                    <div>
+                        <input type="submit" value="Complete Drive!" class="btn btn-danger" onclick="return confirm('Are you sure you wish to complete this drive?');" />
+                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
+
+                    </div>
+                </div>
+            }
         }
     }
     else
