@@ -71,6 +71,15 @@ namespace Wildlife.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public async Task<ActionResult> GetAvailabilities()
+        {
+            // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            return Json(user.Availabilities, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> RemoveFromAvailabilities(int slotId)
         {
             // possible issue if user isnt logged in somehow? but i think only possible via direct url so doesnt matter
@@ -85,7 +94,7 @@ namespace Wildlife.Controllers
             {
                 ViewBag.Title = "Failed";
             }
-            return View();
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -105,7 +114,7 @@ namespace Wildlife.Controllers
             {
                 ViewBag.Title = "Failed";
             }
-            return View();
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -124,7 +133,7 @@ namespace Wildlife.Controllers
             {
                 ViewBag.Title = "Failed";
             }
-            return View();
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
         //https://stackoverflow.com/questions/33984530/how-to-update-identitys-manage-controller
