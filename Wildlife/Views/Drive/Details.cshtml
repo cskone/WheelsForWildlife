@@ -12,9 +12,13 @@
     {
         <h3>Completed Drive</h3>
     }
-    else
+    else if (Model.DriverId != null)
     {
         <h3>Active Drive</h3>
+    }
+    else
+    {
+        <h3>Available Drive</h3>
     }
     <hr />
     <dl class="dl-horizontal">
@@ -185,7 +189,9 @@
             {
                 <div class="form-group">
                     <div>
-                        <input type="submit" value="Accept Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
+                        @if (ViewBag.numDrives == 0) {
+                            <input type = "submit" value = "Accept Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
+                        }
                         @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
 
                     </div>

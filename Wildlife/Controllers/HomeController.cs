@@ -20,12 +20,11 @@ namespace Wildlife.Controllers
 
         // GET: Drives
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(bool? showcompleted = false, bool? showOnlyActive = false)
         {
             if (User.Identity.IsAuthenticated)
             {
-                var user = User.Identity;
-                ViewBag.Name = user.Name;
+                ViewBag.Name = User.Identity.Name;
 
                 ViewBag.displayMenu = "Driver";
 
@@ -41,56 +40,70 @@ namespace Wildlife.Controllers
 
             var drives = await db.Drives.ToListAsync();
             List<DriveInfoViewModel> driveInfoViewModels = new List<DriveInfoViewModel>();
+
+            ViewBag.showcompleted = showcompleted;
+            ViewBag.showOnlyActive = showOnlyActive;
+
             foreach (var drive in drives)
             {
                 if (drive.DriverId == User.Identity.GetUserId() || drive.DriverId == null || User.IsInRole("Admin"))
                 {
-                    var driveInfoViewModel = new DriveInfoViewModel
+                    // hides completed if showcompleted isnt set, and shows if it is
+                    if (drive.DriveDone == showcompleted)
                     {
-                        DriveId = drive.DriveId,
-                        DriveName = drive.DriveName,
-                        ExtraDetails = drive.ExtraDetails,
-                        DriverId = drive.DriverId,
-                        DriveDistance = (double)drive.DriveDistance * 0.000621371192,
-                        DriveDuration = drive.DriveDuration / 60,
+                        // if showonlyactive is not true then driver id needs to be set
+                        // otherwise driverid can be anything and showonlyactive will be not false
+                        if (drive.DriverId != null || (bool)!showOnlyActive)
+                        {
+                            var driveInfoViewModel = new DriveInfoViewModel
+                            {
+                                DriveId = drive.DriveId,
+                                DriveName = drive.DriveName,
+                                ExtraDetails = drive.ExtraDetails,
+                                DriverId = drive.DriverId,
+                                DriveDistance = (double)drive.DriveDistance * 0.000621371192,
+                                DriveDuration = drive.DriveDuration / 60,
 
-                        StartAddressLine1 = drive.StartLocation.AddressLine1,
-                        StartAddressLine2 = drive.StartLocation.AddressLine2,
-                        StartCity = drive.StartLocation.City,
-                        StartCountryRegion = drive.StartLocation.CountryRegion,
-                        StartPostalCode = drive.StartLocation.PostalCode,
-                        StartStateProvince = drive.StartLocation.StateProvince,
+                                StartAddressLine1 = drive.StartLocation.AddressLine1,
+                                StartAddressLine2 = drive.StartLocation.AddressLine2,
+                                StartCity = drive.StartLocation.City,
+                                StartCountryRegion = drive.StartLocation.CountryRegion,
+                                StartPostalCode = drive.StartLocation.PostalCode,
+                                StartStateProvince = drive.StartLocation.StateProvince,
 
-                        EndAddressLine1 = drive.EndLocation.AddressLine1,
-                        EndAddressLine2 = drive.EndLocation.AddressLine2,
-                        EndCity = drive.EndLocation.City,
-                        EndCountryRegion = drive.EndLocation.CountryRegion,
-                        EndPostalCode = drive.EndLocation.PostalCode,
-                        EndStateProvince = drive.EndLocation.StateProvince,
+                                EndAddressLine1 = drive.EndLocation.AddressLine1,
+                                EndAddressLine2 = drive.EndLocation.AddressLine2,
+                                EndCity = drive.EndLocation.City,
+                                EndCountryRegion = drive.EndLocation.CountryRegion,
+                                EndPostalCode = drive.EndLocation.PostalCode,
+                                EndStateProvince = drive.EndLocation.StateProvince,
 
-                    };
-                    var user = await UserManager.FindByIdAsync(drive.DriverId);
-                    if (user != null)
-                    {
-                        driveInfoViewModel.DriverId = user.UserName;
+                            };
+                            var usr = await UserManager.FindByIdAsync(drive.DriverId);
+                            if (usr != null)
+                            {
+                                driveInfoViewModel.DriverId = usr.UserName;
+                            }
+                            else
+                            {
+                                driveInfoViewModel.DriverId = null;
+                            }
+
+                            driveInfoViewModels.Add(driveInfoViewModel);
+                        }
                     }
-                    else
-                    {
-                        driveInfoViewModel.DriverId = null;
-                    }
-                    user = await UserManager.FindByNameAsync(User.Identity.Name);
-                    if (user != null && user.PhoneNumber != null && user.Availabilities.Count() >= 1)
-                    {
-                        ViewBag.setup = true;
-                    }
-                    else
-                    {
-                        ViewBag.setup = false;
-                    }
-                    driveInfoViewModels.Add(driveInfoViewModel);
                 }
             }
             driveInfoViewModels = driveInfoViewModels.OrderByDescending(d => d.DriverId).ToList();
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            if (user != null && user.PhoneNumber != null && user.Availabilities.Count() >= 1)
+            {
+                ViewBag.setup = true;
+            }
+            else
+            {
+                ViewBag.setup = false;
+            }
             return View(driveInfoViewModels);
         }
         public Boolean isAdminUser()
