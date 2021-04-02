@@ -141,6 +141,7 @@ namespace Wildlife.Controllers
                 DriverId = drive.DriverId,
                 DriveDistance = (double)drive.DriveDistance * 0.000621371192,
                 DriveDuration = drive.DriveDuration / 60,
+                DriveDone = drive.DriveDone,
 
                 StartAddressLine1 = drive.StartLocation.AddressLine1,
                 StartAddressLine2 = drive.StartLocation.AddressLine2,
@@ -256,8 +257,9 @@ namespace Wildlife.Controllers
             }
             else if(drive.DriverId == User.Identity.GetUserId())
             {
-                //mark drive as done here :)
-                ;
+                drive.DriveDone = true;
+                db.Entry(drive).State = EntityState.Modified;
+                _ = await db.SaveChangesAsync();
             }
             return RedirectToAction("Details");
         }

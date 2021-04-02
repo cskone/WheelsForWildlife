@@ -41,6 +41,7 @@ namespace Wildlife.Models
         [DisplayFormat(DataFormatString = "{0:2}", ApplyFormatInEditMode = true)]
         public decimal DriveDuration { get; set; }
 
+        public bool DriveDone { get; set; }
 
         public Drive(string driveName, CivicAddress startLocation, CivicAddress endLocation, string driverId)
         {
@@ -51,6 +52,7 @@ namespace Wildlife.Models
             Tuple<int, int> driveDetails = CalcDriveDetails();
             DriveDistance = driveDetails.Item2;
             DriveDuration = driveDetails.Item1;
+            DriveDone = false;
         }
 
         public Drive(string driveName, string extraDetails, CivicAddress startLocation, CivicAddress endLocation, string driverId)
@@ -63,6 +65,8 @@ namespace Wildlife.Models
             Tuple<int, int> driveDetails = CalcDriveDetails();
             DriveDuration = driveDetails.Item1;
             DriveDistance = driveDetails.Item2;
+            DriveDone = false;
+
         }
 
         public Drive()
