@@ -179,9 +179,13 @@ namespace Wildlife.Controllers
                 driveInfoViewModel.DriverId = null;
             }
 
+            // num active drives
+            ViewBag.numDrives = db.Drives.ToList().Where(d => d.DriveDone == false && d.DriverId == User.Identity.GetUserId()).Count();
+
             return View(driveInfoViewModel);
         }
 
+        // need to make this database relation to user and drive id so it doenst recalc fourteen thousand times
         public Tuple<int, int> CalcDriveDistDurFromUser(ApplicationUser usr, Drive drive)
         {
             try
@@ -251,6 +255,12 @@ namespace Wildlife.Controllers
             var drive = db.Drives.ToList().Find(d => d.DriveId == id);
             if (drive.DriverId == null)
             {
+                // num active drives
+                if (db.Drives.ToList().Where(d => d.DriveDone == false && d.DriverId == User.Identity.GetUserId()).Count() > 0)
+                {
+                    ViewBag.emsg = "u have an active drive";
+                    return View();
+                }
                 drive.DriverId = User.Identity.GetUserId();
                 db.Entry(drive).State = EntityState.Modified;
                 _ = await db.SaveChangesAsync();

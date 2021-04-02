@@ -5,15 +5,43 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Available Drives</h2>
-
+@if (ViewBag.showcompleted)
+{
+    <h2>Your Completed Drives</h2>
+}
+else if (ViewBag.showOnlyActive)
+{
+    <h2>Active Drives</h2>
+}
+else
+{
+    <h2>Available and Active Drives</h2>
+}
 @if (User.IsInRole("Driver") || (User.IsInRole("Admin")))
 {
 
     if (ViewBag.setup == true || User.IsInRole("Admin"))
     {
-
-
+        var activeclass = "";
+        if (ViewBag.showOnlyActive)
+        {
+            activeclass = "btn btn-success";
+        }
+        else
+        {
+            activeclass = "btn btn-default";
+        }
+        @Html.ActionLink("Show Only Active Drives", "Index", routeValues: new { showOnlyActive = !ViewBag.showOnlyActive }, htmlAttributes: new { @class = activeclass })
+        <text>&nbsp;</text>
+        if (ViewBag.showcompleted)
+        {
+            activeclass = "btn btn-success";
+        }
+        else
+        {
+            activeclass = "btn btn-default";
+        }
+        @Html.ActionLink("Show Only Completed Drives", "Index", routeValues: new { showcompleted = !ViewBag.showcompleted }, htmlAttributes: new { @class = activeclass })
         <table class="table">
             <tr>
                 <th>
@@ -30,7 +58,7 @@
 
             @foreach (var item in Model)
             {
-                <tr style="border-top:2px solid black;" >
+                <tr style="border-top:2px solid black;">
                     <td>
                         @Html.DisplayFor(modelItem => item.DriveName)
                     </td>
