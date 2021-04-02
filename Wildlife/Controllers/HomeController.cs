@@ -41,8 +41,8 @@ namespace Wildlife.Controllers
             var drives = await db.Drives.ToListAsync();
             List<DriveInfoViewModel> driveInfoViewModels = new List<DriveInfoViewModel>();
 
-            ViewBag.showcompleted = showcompleted;
-            ViewBag.showOnlyActive = showOnlyActive;
+            ViewBag.showcompleted = (bool)showcompleted;
+            ViewBag.showOnlyActive = (bool)showOnlyActive;
 
             foreach (var drive in drives)
             {

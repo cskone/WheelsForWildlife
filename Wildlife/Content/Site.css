@@ -121,10 +121,16 @@ textarea {
             max-width: 70px !important;
         }
 
-        .scheduler .body td[rowspan] {
-            background-color: #ecebeb;
-            vertical-align: top;
-        }
+    .scheduler .body th[rowspan] {
+        background-color: #ecebeb;
+        vertical-align: top;
+        min-width: 70px !important;
+        width: 70px !important;
+        max-width: 70px !important;
+        border-right: 1px solid #706e6e;
+        border-bottom: 1px solid #706e6e;
+        font-weight: normal;
+    }
 
     .scheduler tr.timeslot-top td:first-child {
         border-bottom: 1px solid gray;

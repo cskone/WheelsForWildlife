@@ -14,19 +14,19 @@
     @Html.ValidationSummary("", new { @class = "text-danger" })
     @Html.HiddenFor(m => m.OldUserName)
 
-    var index = 0;
-    if (Model.Availabilities != null)
-    {
-        foreach (var item in Model.Availabilities)
+    @*var index = 0;
+        if (Model.Availabilities != null)
         {
-            @Html.HiddenFor(m => m.Availabilities[index].DriverId);
-            @Html.HiddenFor(m => m.Availabilities[index].Dayoftheweek);
-            @Html.HiddenFor(m => m.Availabilities[index].EndTime);
-            @Html.HiddenFor(m => m.Availabilities[index].SlotId);
-            @Html.HiddenFor(m => m.Availabilities[index].StartTime);
-            index++;
-        }
-    }
+            foreach (var item in Model.Availabilities)
+            {
+                @Html.HiddenFor(m => m.Availabilities[index].DriverId);
+                @Html.HiddenFor(m => m.Availabilities[index].Dayoftheweek);
+                @Html.HiddenFor(m => m.Availabilities[index].EndTime);
+                @Html.HiddenFor(m => m.Availabilities[index].SlotId);
+                @Html.HiddenFor(m => m.Availabilities[index].StartTime);
+                index++;
+            }
+        }*@
 
     @*<div class="form-group">
             @Html.LabelFor(m => m.OldUserName, new { @class = "col-md-2 control-label" })
@@ -157,115 +157,139 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-$(document).ready(function () {
+        $(document).ready(function () {
 
-   function timeString(time) {
+            function timeString(time) {
 
-      time = 60 * time;
-      var hours = Math.floor(time / 60);
-      var minutes = time % 60;
-      return hours + ":" + (minutes < 10 ? '0' : "") + minutes;
-   }
+                time = 60 * time;
+                var hours = Math.floor(time / 60);
+                var minutes = time % 60;
+                return hours + ":" + (minutes < 10 ? '0' : "") + minutes;
+            }
 
-   function addTimeSlot(time, value, j) {
-      // create new row
-      var r = document.createElement('tr');
-      if (j % 2 == 0) {
-         $(r).addClass("timeslot-top");
-         $(r).append("<td rowspan=2>" + time + "</td>");
-      }
-      else {
-         $(r).addClass("timeslot-bottom");
-      }
-      for (var i = 0; i < 7; i++) {
-         var d = document.createElement('td');
-         $(d).addClass('not-set');
-         $(d).attr('data-day', i);
-         $(d).attr('data-time', value);
-         $(r).append(d);
-      }
+            function addTimeSlot(time, value, j) {
+                // create new row
+                var r = document.createElement('tr');
+                if (j % 2 == 0) {
+                    $(r).addClass("timeslot-top");
+                    $(r).append("<th rowspan=2>" + time + "</th>");
+                }
+                else {
+                    $(r).addClass("timeslot-bottom");
+                }
+                for (var i = 0; i < 7; i++) {
+                    var d = document.createElement('td');
+                    $(d).addClass('not-set');
+                    $(d).attr('data-day', i);
+                    $(d).attr('data-time', value);
+                    $(r).append(d);
+                }
 
-      $(r).appendTo('#scheduler > tbody');
-   }
+                $(r).appendTo('#scheduler > tbody');
+            }
 
-   function displayAvailabilityBlock(id, day, start, end) {
-      for (var t = start; t < end; t = t + 0.25) {
-         var attr_filter = "td[data-day='" + day + "'][data-time='" + t + "']";
-         $(attr_filter).removeClass('not-set').addClass('available').attr("data-id", id);
+            function displayAvailabilityBlock(id, day, start, end) {
+                for (var t = start; t < end; t = t + 0.25) {
+                    var attr_filter = "td[data-day='" + day + "'][data-time='" + t + "']";
+                    $(attr_filter).removeClass('not-set').addClass('available').attr("data-id", id);
 
-         if (t == start) {
-            $(attr_filter).css({ "border-top": "solid grey 1px" });
-            $(attr_filter).text(timeString(start) + " - " + timeString(end));
-            $(attr_filter).append("<i class='fas fa-trash-alt slot-command delete-availability'></i>");
-         }
-         if (t == end - 0.25) {
-            $(attr_filter).css({ "border-bottom": "solid grey 1px" });
-         }
-      }
-   }
+                    if (t == start) {
+                        $(attr_filter).css({ "border-top": "solid grey 1px" });
+                        $(attr_filter).text(timeString(start) + " - " + timeString(end));
+                        $(attr_filter).append("<i class='fas fa-trash-alt slot-command delete-availability'></i>");
+                    }
+                    if (t == end - 0.25) {
+                        $(attr_filter).css({ "border-bottom": "solid grey 1px" });
+                    }
+                }
+            }
 
-   function updateNewAvailabilityDisplay() {
-      if (edit_availability.top_cell == edit_availability.bottom_cell) {
-         $(edit_availability.top_cell).text(timeString(edit_availability.start) + " - " + timeString(edit_availability.end));
-      }
-      else {
-         $(edit_availability.top_cell).text(timeString(edit_availability.start));
-         $(edit_availability.bottom_cell).text(timeString(edit_availability.end));
-      }
 
-      $(edit_availability.top_cell).addClass('drag-up');
-      $(edit_availability.bottom_cell).addClass('drag-down');
+            function clearAvailabilityBlock(id) {
+                $("td[data-id=" + id + "]").removeClass("available");
+                $("td[data-id=" + id + "]").removeAttr("data-id");
 
-      $(edit_availability.top_cell).append('<span class="slot-command cancel-slot">&#10008;</span><div class="slot-command accept-slot">&#10004;</div>');
-   }
+            }
 
-   function cleanupNewAvailability() {
+            function updateNewAvailabilityDisplay() {
+                if (edit_availability.top_cell == edit_availability.bottom_cell) {
+                    $(edit_availability.top_cell).text(timeString(edit_availability.start) + " - " + timeString(edit_availability.end));
+                }
+                else {
+                    $(edit_availability.top_cell).text(timeString(edit_availability.start));
+                    $(edit_availability.bottom_cell).text(timeString(edit_availability.end));
+                }
 
-      $('.drag-overlay').removeClass('drag-overlay').removeClass('drag-up').removeClass('drag-down');
-      $(edit_availability.top_cell).text("");
-      $(edit_availability.bottom_cell).text("");
+                $(edit_availability.top_cell).addClass('drag-up');
+                $(edit_availability.bottom_cell).addClass('drag-down');
 
-      if (edit_availability.id != -1) {
-         // restore original slot before forgeting all about it
-         displayAvailabilityBlock(edit_availability.id, edit_availability.day, edit_availability.original_start, edit_availability.original_end);
-      }
+                $(edit_availability.top_cell).append('<span class="slot-command cancel-slot">&#10008;</span><div class="slot-command accept-slot">&#10004;</div>');
+            }
 
-      edit_availability.id = -1;
-      edit_availability.day = -1;
-      edit_availability.start = -1;
-      edit_availability.end = -1;
-      edit_availability.column_l = -1;
-      edit_availability.column_r = -1;
-      edit_availability.top_cell = null;
-      edit_availability.bottom_cell = null;
-      edit_availability.original_start = -1;
-      edit_availability.original_end = -1;
 
-   }
+            function cleanupNewAvailability() {
 
-   var quarterHours = ["00", "15", "30", "45"];
-   var v_quarterHours = [0, 0.25, 0.5, 0.75];
-   for (var i = 5; i < 12; i++) {
-      for (var j = 0; j < 4; j++) {
-         var time = i + ":" + quarterHours[j] + " AM";
-         var value = i + v_quarterHours[j];
-         addTimeSlot(time, value, j);
-      }
-   }
-   for (var j = 0; j < 4; j++) {
-      var time = 12 + ":" + quarterHours[j] + " PM";
-      var value = 12 + v_quarterHours[j];
-      addTimeSlot(time, value, j);
-   }
-   for (var i = 1; i <= 8; i++) {
-      for (var j = 0; j < 4; j++) {
-         var time = i + ":" + quarterHours[j] + " PM";
-         var value = i + v_quarterHours[j];
-         addTimeSlot(time, value + 12, j);
-      }
-   }
+                $('.drag-overlay').removeClass('drag-overlay').removeClass('drag-up').removeClass('drag-down');
+                //$(edit_availability.top_cell).text("");
+                $(edit_availability.bottom_cell).text("");
 
-    var availability = [
+                edit_availability.id = -1;
+                edit_availability.day = -1;
+                edit_availability.start = -1;
+                edit_availability.end = -1;
+                edit_availability.column_l = -1;
+                edit_availability.column_r = -1;
+                edit_availability.top_cell = null;
+                edit_availability.bottom_cell = null;
+                edit_availability.original_start = -1;
+                edit_availability.original_end = -1;
+
+            }
+
+            var quarterHours = ["00", "15", "30", "45"];
+            var v_quarterHours = [0, 0.25, 0.5, 0.75];
+            for (var i = 5; i < 12; i++) {
+                for (var j = 0; j < 4; j++) {
+                    var time = i + ":" + quarterHours[j] + " AM";
+                    var value = i + v_quarterHours[j];
+                    addTimeSlot(time, value, j);
+                }
+            }
+            for (var j = 0; j < 4; j++) {
+                var time = 12 + ":" + quarterHours[j] + " PM";
+                var value = 12 + v_quarterHours[j];
+                addTimeSlot(time, value, j);
+            }
+            for (var i = 1; i <= 8; i++) {
+                for (var j = 0; j < 4; j++) {
+                    var time = i + ":" + quarterHours[j] + " PM";
+                    var value = i + v_quarterHours[j];
+                    addTimeSlot(time, value + 12, j);
+                }
+            }
+        
+            var availability = [];
+
+        $.ajax({
+            type: "Get",
+            url: "/Manage/GetAvailabilities",
+            cache: false,
+            data: { },
+            async: false,
+            success: function (data) {
+
+                data.forEach(function (ava) {
+
+                    availability.push({
+                        id: ava.SlotId,
+                        day: ava.Dayoftheweek,
+                        time: { start: ava.StartTime, end: ava.EndTime },
+                    });
+                });
+            },
+        });
+
+            @*var availability = [
        @if (Model.Availabilities != null)
        {
 
@@ -280,7 +304,7 @@ $(document).ready(function () {
                </text>
                    }
         }
-       ];
+       ];*@
 
                // highlight availability
 
@@ -320,7 +344,6 @@ $(document).ready(function () {
                        url: "/Manage/RemoveFromAvailabilities",
                        cache: false,
                        data: { slotId: id },
-                       async: false,
                    });
 
                    }
@@ -328,6 +351,10 @@ $(document).ready(function () {
                }
 
                if ($(e.target).hasClass('cancel-slot')) {
+                   if (edit_availability.id != -1) {
+                       // restore original slot before forgeting all about it
+                       displayAvailabilityBlock(edit_availability.id, edit_availability.day, edit_availability.original_start, edit_availability.original_end);
+                   }
                    cleanupNewAvailability();
                    return true;
                }
@@ -340,8 +367,18 @@ $(document).ready(function () {
                        type: "Get",
                        url: "/Manage/EditAvailabilities",
                        cache: false,
-                       data: { SlotId: id, start: edit_availability.start, end: edit_availability.end },
-                       async: false,
+                        data: { SlotId: edit_availability.id, start: edit_availability.start, end: edit_availability.end },
+                        success: function (data) {
+                            displayAvailabilityBlock(edit_availability.id, edit_availability.day, edit_availability.start, edit_availability.end);
+                            availability.find(a => a.id == edit_availability.id).time.start = edit_availability.start;
+                            availability.find(a => a.id == edit_availability.id).time.end = edit_availability.end;
+                            $(".body td").removeClass('available').addClass('not-set').removeAttr("data_id").removeAttr('style').text("");
+                            cleanupNewAvailability();
+                            availability.forEach(function (value) {
+                                // find all cells of given date and times between start and end and change color to show availability
+                                displayAvailabilityBlock(value.id, value.day, value.time.start, value.time.end);
+                            });
+                        },   
                     });
                    }
                    else {
@@ -350,11 +387,20 @@ $(document).ready(function () {
                        url: "/Manage/AddToAvailabilities",
                        cache: false,
                        data: { UserId: "@ViewBag.UserId", day: edit_availability.day, start: edit_availability.start, end: edit_availability.end },
-                       async: false,
+                        async: false,
+                        success: function (data) {
+                            displayAvailabilityBlock(edit_availability.id, edit_availability.day, edit_availability.start, edit_availability.end);
+                            availability.push({
+                                id: edit_availability.id,
+                                day: edit_availability.day,
+                                time: { start: edit_availability.start, end: edit_availability.end },
+                            });
+                            cleanupNewAvailability();
+                        },   
                     });
                    }
-                   cleanupNewAvailability();
-                   location.reload(true);
+
+                   //location.reload(true);
                    return true;
                }
 
@@ -395,7 +441,7 @@ $(document).ready(function () {
 
 
                }
-      else {
+               else {
                    edit_availability.day = $(e.target).attr('data-day');
                    edit_availability.start = parseFloat($(e.target).attr('data-time'));
                    edit_availability.end = edit_availability.start + 0.25;
@@ -404,7 +450,12 @@ $(document).ready(function () {
                    edit_availability.top_cell = e.target;
                    edit_availability.bottom_cell = e.target;
          $(e.target).addClass('drag-overlay');
-               }
+       }
+           $(".body td").removeClass('available').addClass('not-set').removeAttr("data_id").removeAttr('style').text("");
+           availability.forEach(function (value) {
+               // find all cells of given date and times between start and end and change color to show availability
+               displayAvailabilityBlock(value.id, value.day, value.time.start, value.time.end);
+           });
 
                updateNewAvailabilityDisplay();
 
