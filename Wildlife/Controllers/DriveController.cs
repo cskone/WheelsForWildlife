@@ -529,7 +529,7 @@ namespace Wildlife.Controllers
 
                 db.Entry(drive).State = EntityState.Modified;
                 _ = await db.SaveChangesAsync();
-                return RedirectToAction("Index", "Drive", new { Message = "Updated!" });
+                return RedirectToAction("Index", "Home", new { Message = "Updated!" });
             }
             return View(driveInfoViewModel);
         }
