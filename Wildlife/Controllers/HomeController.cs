@@ -135,7 +135,7 @@ namespace Wildlife.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Wheels For Wildlife Support";
 
             return View();
         }
