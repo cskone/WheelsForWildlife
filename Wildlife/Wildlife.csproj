@@ -437,7 +437,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\hwc.png" />
     <Content Include="Images\rescue-team-sticker.jpg" />
+    <Content Include="Images\wildlifeTeam.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\webfonts\fa-brands-400.eot" />
