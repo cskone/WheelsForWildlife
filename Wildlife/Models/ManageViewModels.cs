@@ -4,6 +4,7 @@ using System.Device.Location;
 using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Owin.Security;
 
 namespace Wildlife.Models
@@ -252,6 +253,9 @@ namespace Wildlife.Models
         public decimal UserDuration { get; set; }
 
         public bool DriveDone { get; set; }
+        public System.Web.Mvc.SelectList OptedInDrivers { get; set; }
+
+        public string SelectedDriver { get; set; }
     }
 
     public class AddPhoneNumberViewModel

@@ -21,5 +21,7 @@ namespace Wildlife.Data
 
         public DbSet<Wildlife.Models.Drive> Drives { get; set; }
         public DbSet<Wildlife.Models.Availability> Availabilities { get; set; }
+        public DbSet<Wildlife.Models.DriverIdString> OptedInDrivers { get; set; }
+
     }
 }

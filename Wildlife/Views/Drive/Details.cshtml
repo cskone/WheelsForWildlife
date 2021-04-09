@@ -189,8 +189,13 @@
             {
                 <div class="form-group">
                     <div>
-                        @if (ViewBag.numDrives == 0) {
-                            <input type = "submit" value = "Accept Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
+                        @if (ViewBag.numDrives == 0 && !ViewBag.alreadyOptedIn)
+                        {
+                            <input type="submit" value="Opt-in Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
+                        }
+                        else if (ViewBag.alreadyOptedIn)
+                        {
+                            <input type="submit" value="You have already opted in!" class="btn btn-default" disabled />
                         }
                         @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
 
@@ -198,7 +203,7 @@
                 </div>
             }
         }
-        else if(Model.DriverId == User.Identity.Name)
+        else if (Model.DriverId == User.Identity.Name)
         {
             using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
@@ -206,7 +211,7 @@
                     <div>
                         @if (Model.DriveDone == false)
                         {
-                        <input type="submit" value="Complete Drive!" class="btn btn-danger" onclick="return confirm('Are you sure you wish to complete this drive?');" />
+                            <input type="submit" value="Complete Drive!" class="btn btn-danger" onclick="return confirm('Are you sure you wish to complete this drive?');" />
                         }
                         @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
 
@@ -217,6 +222,22 @@
     }
     else
     {
+        if (Model.DriverId == null)
+        {
+            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+            @Html.Label("Opted In Drivers", new { @class = "col-md-2 control-label" })
+            <div class="form-group">
+
+                @Html.ListBoxFor(m => m.SelectedDriver, Model.OptedInDrivers, new { @class = "form-control", aria_label = "Default select example" })
+            </div>
+            <div class="form-group">
+                <div>
+                    <input type="submit" value="Accept Driver!" class="btn btn-warning" onclick="return confirm('Are you sure you wish to assign this driver?');" />
+                </div>
+            </div>
+            }
+        }
         @Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
         <br />
         <br />

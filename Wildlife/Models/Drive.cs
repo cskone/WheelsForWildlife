@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Configuration;
+using System.Data.Entity;
 using System.Device.Location;
 using System.IO;
 using System.Linq;
@@ -34,6 +35,8 @@ namespace Wildlife.Models
         public CivicAddress EndLocation { get; set; }
         [Display(Name = "Drive Details")]
         public string ExtraDetails { get; set; }
+        [Display(Name = "Opted In Drivers")]
+        public virtual IList<DriverIdString> OptedInDrivers { get; set; }
         [Display(Name = "Driver Email")]
         public string DriverId { get; set; }
         [DisplayFormat(DataFormatString = "{0:2}", ApplyFormatInEditMode = true)]
@@ -53,6 +56,7 @@ namespace Wildlife.Models
             DriveDistance = driveDetails.Item2;
             DriveDuration = driveDetails.Item1;
             DriveDone = false;
+            //OptedInDrivers = new List<string>();
         }
 
         public Drive(string driveName, string extraDetails, CivicAddress startLocation, CivicAddress endLocation, string driverId)
@@ -66,12 +70,24 @@ namespace Wildlife.Models
             DriveDuration = driveDetails.Item1;
             DriveDistance = driveDetails.Item2;
             DriveDone = false;
+            //OptedInDrivers = new List<string>();
 
         }
 
         public Drive()
         {
 
+        }
+
+
+        public List<string> OptedInDriversToList()
+        {
+            List<string> o = new List<string>();
+            foreach(var x in OptedInDrivers)
+            {
+                o.Add(x.DriverId);
+            }
+            return o;
         }
 
         public Tuple<int, int> CalcDriveDetails()

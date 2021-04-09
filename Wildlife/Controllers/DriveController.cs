@@ -142,6 +142,8 @@ namespace Wildlife.Controllers
                 DriveDistance = (double)drive.DriveDistance * 0.000621371192,
                 DriveDuration = drive.DriveDuration / 60,
                 DriveDone = drive.DriveDone,
+                OptedInDrivers = new SelectList(drive.OptedInDrivers, "DriverId", "DriverId"),
+                SelectedDriver = null,
 
                 StartAddressLine1 = drive.StartLocation.AddressLine1,
                 StartAddressLine2 = drive.StartLocation.AddressLine2,
@@ -168,6 +170,10 @@ namespace Wildlife.Controllers
                 driveInfoViewModel.UserDistance = userDistance * 0.000621371192;
                 driveInfoViewModel.UserDuration = userDuration / 60;
             }
+            else
+            {
+
+            }
 
             user = await UserManager.FindByIdAsync(drive.DriverId);
             if (user != null)
@@ -181,7 +187,14 @@ namespace Wildlife.Controllers
 
             // num active drives
             ViewBag.numDrives = db.Drives.ToList().Where(d => d.DriveDone == false && d.DriverId == User.Identity.GetUserId()).Count();
-
+            if (drive.OptedInDriversToList().Count() != 0 && drive.OptedInDriversToList().Contains(User.Identity.GetUserName()))
+            {
+                ViewBag.alreadyOptedIn = true;
+            }
+            else
+            {
+                ViewBag.alreadyOptedIn = false;
+            }
             return View(driveInfoViewModel);
         }
 
@@ -250,27 +263,46 @@ namespace Wildlife.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int id, DriveInfoViewModel driveInfoViewModel)
         {
             var drive = db.Drives.ToList().Find(d => d.DriveId == id);
-            if (drive.DriverId == null)
+            if (User.IsInRole("Driver"))
             {
-                // num active drives
-                if (db.Drives.ToList().Where(d => d.DriveDone == false && d.DriverId == User.Identity.GetUserId()).Count() > 0)
+                if (drive.DriverId == null)
                 {
-                    ViewBag.emsg = "u have an active drive";
-                    return View();
+                    drive.OptedInDrivers.Add(new DriverIdString(User.Identity.GetUserName()));
                 }
-                drive.DriverId = User.Identity.GetUserId();
-                db.Entry(drive).State = EntityState.Modified;
-                _ = await db.SaveChangesAsync();
+                //var drive = db.Drives.ToList().Find(d => d.DriveId == id);
+                //if (drive.DriverId == null)
+                //{
+                //    // num active drives
+                //    if (db.Drives.ToList().Where(d => d.DriveDone == false && d.DriverId == User.Identity.GetUserId()).Count() > 0)
+                //    {
+                //        ViewBag.emsg = "u have an active drive";
+                //        return View();
+                //    }
+                //    drive.DriverId = User.Identity.GetUserId();
+                //    db.Entry(drive).State = EntityState.Modified;
+                //    _ = await db.SaveChangesAsync();
+                //}
+                else if (drive.DriverId == User.Identity.GetUserId())
+                {
+                    drive.DriveDone = true;
+                }
             }
-            else if(drive.DriverId == User.Identity.GetUserId())
+            else
             {
-                drive.DriveDone = true;
-                db.Entry(drive).State = EntityState.Modified;
-                _ = await db.SaveChangesAsync();
+               if (driveInfoViewModel.SelectedDriver == null)
+               {
+                    return View(driveInfoViewModel);
+               }
+                else
+                {
+                    drive.DriverId = UserManager.FindByName(driveInfoViewModel.SelectedDriver).Id;
+                }
             }
+            db.Entry(drive).State = EntityState.Modified;
+            _ = await db.SaveChangesAsync();
             return RedirectToAction("Details");
         }
         // GET: Drives/Create
@@ -557,6 +589,10 @@ namespace Wildlife.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Drive drive = await db.Drives.FindAsync(id);
+            //IList<DriverIdString> tmplist = drive.OptedInDrivers.;
+            while (drive.OptedInDrivers.Count > 0) {
+                db.OptedInDrivers.Remove(drive.OptedInDrivers.First());
+            }
             db.Drives.Remove(drive);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
