@@ -6,17 +6,20 @@
     {
 @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-        @if (@User.IsInRole("Admin"))
-        {
-            <li>@Html.ActionLink("Users", "UserManagement", "Manage", routeValues: null, htmlAttributes: new { id = "userLink" })</li>
-            <li>@Html.ActionLink("Drives", "Index", "Drive", routeValues: null, htmlAttributes: new { id = "driveLink" })</li>
-        }
-    </ul>
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+    </li>
+    <li>
+        @Html.ActionLink("Manage Settings", "Index", "Manage")
+    </li>
+    <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+    @if (@User.IsInRole("Admin"))
+    {
+        <li>@Html.ActionLink("Users", "UserManagement", "Manage", routeValues: null, htmlAttributes: new { id = "userLink" })</li>
+        <li>@Html.ActionLink("Drives", "Index", "Drive", routeValues: null, htmlAttributes: new { id = "driveLink" })</li>
+    }
+</ul>
     }
 }
 else
