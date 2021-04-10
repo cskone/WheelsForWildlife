@@ -370,8 +370,6 @@ namespace Wildlife.Controllers
 
                 await db.SaveChangesAsync();
                 List<Drive> drives = await db.Drives.ToListAsync();
-                usersToNotify.Add(UserManager.FindByName("itshawk@gnode.org"));
-                usersToNotify.Add(UserManager.FindByName("itshawk@gnode.org"));
 
                 usersToNotify = usersToNotify.Distinct().ToList();
                 await SendEmailAsync(usersToNotify, drives.Last());
