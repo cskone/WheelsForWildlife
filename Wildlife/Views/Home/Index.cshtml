@@ -5,18 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@if (ViewBag.showcompleted)
-{
-    <h2>Your Completed Drives</h2>
-}
-else if (ViewBag.showOnlyActive)
-{
-    <h2>Active Drives</h2>
-}
-else
-{
-    <h2>Available and Active Drives</h2>
-}
+
 @if (User.IsInRole("Driver") || (User.IsInRole("Admin")))
 {
 
@@ -113,4 +102,56 @@ else
         </h2>
     }
 
+}
+else
+{
+    <div style="background-color: lightblue; padding:30px" ;>
+        <h2 class="center" ;>
+            Welcome to the Wheels for Wildlife Team!
+        </h2>
+        <p class="descript" ;>
+            Where volunteer drivers provide ground transport for wildlife patients.
+        </p>
+    </div>
+
+    <p class="ital" ;>
+        Returning Drivers, please Log In at the top right.
+    </p>
+
+    <div>
+        <h3 class="center" ; style=" text-align: center; color:#00688F">
+            Become a Team Member!
+        </h3>
+        <p style="text-align: center; font: 18px arial">
+            To apply to join the Wheels for Wildlife team, please download and complete the application form in the 'Become a Driver' link above
+            and send it to our wildlife staff at birdhelp@hawaiiwildlifecenter.org.
+            If you’d like more information, please contact us at the birdhelp email address.
+        </p>
+    </div>
+
+    <div style="padding-top: 50px; padding-bottom: 50px;">
+        <img src="~/Images/rescue-team-sticker.jpg" alt="Bird in Box" style="float: right; width:300px; height:300px;">
+        <h2 class="title">
+            Program Summary
+        </h2>
+        <p class="pp">
+            Founded in 2012, the Wheels for Wildlife (W4W) Program is a volunteer-based transport team that expedites the response
+            process for wildlife needing medical treatment and rehabilitative care.
+            All species of native birds and the Hawaiian hoary bat are transported and volunteers on all islands are welcomed to join.
+        </p>
+        <p class="pp">
+            There is no pressure or requirement to carry out transports. When we need a transport, we put out the call to our W4W volunteers to see who is up for the mission.
+            If you’re unavailable, no worries! We will move on to the next volunteer for that transport.
+        </p>
+    </div>
+
+    <div style="padding: 50px; text-align:center">
+        <img src="~/Images/bird.jpg" alt="Bird" style="width: 225px; height:184px">
+        <img src="~/Images/dancing.jpg" alt="People Dancing" style="width: 225px; height:184px">
+        <img src="~/Images/logoandbirds.jpg" alt="Logo with Birds" style="height: 184px">
+        <img src="~/Images/volunteers.jpg" alt="Volunteers" style="width: 225px; height:184px">
+        <img src="~/Images/walkingbird.jpg" alt="Walking Bird" style="height: 184px"
+    </div>
+
+    
 }

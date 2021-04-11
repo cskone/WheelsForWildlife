@@ -437,8 +437,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\bird.jpg" />
+    <Content Include="Images\dancing.jpg" />
     <Content Include="Images\hwc.png" />
+    <Content Include="Images\logoandbirds.jpg" />
     <Content Include="Images\rescue-team-sticker.jpg" />
+    <Content Include="Images\volunteers.jpg" />
+    <Content Include="Images\walkingbird.jpg" />
     <Content Include="Images\wildlifeTeam.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
