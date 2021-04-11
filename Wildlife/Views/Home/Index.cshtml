@@ -8,21 +8,22 @@
 
 @if (User.IsInRole("Driver") || (User.IsInRole("Admin")))
 {
-    if (ViewBag.showcompleted)
-    {
-        <h2>Your Completed Drives</h2>
-    }
-    else if (ViewBag.showOnlyActive)
-    {
-        <h2>Active Drives</h2>
-    }
-    else
-    {
-        <h2>Available and Active Drives</h2>
-    }
 
     if (ViewBag.setup == true || User.IsInRole("Admin"))
     {
+        if (ViewBag.showcompleted)
+        {
+            <h2>Your Completed Drives</h2>
+        }
+        else if (ViewBag.showOnlyActive)
+        {
+            <h2>Active Drives</h2>
+        }
+        else
+        {
+            <h2>Available and Active Drives</h2>
+        }
+
         var activeclass = "";
         if (ViewBag.showOnlyActive)
         {
