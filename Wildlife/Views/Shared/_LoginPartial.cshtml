@@ -8,10 +8,11 @@
 
 <ul class="nav navbar-nav navbar-right">
     <li>
-        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+        @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!",null,null, routeValues: null, htmlAttributes: new { title = "Manage",
+       style = "pointer-events: none; "})
     </li>
     <li>
-        @Html.ActionLink("Manage Settings", "Index", "Manage")
+        @Html.ActionLink("Settings", "Index", "Manage")
     </li>
     <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     @if (@User.IsInRole("Admin"))
