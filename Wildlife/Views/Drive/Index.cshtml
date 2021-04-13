@@ -7,9 +7,16 @@
 <h2>Index</h2>
 
 @if (ViewBag.displayMenu == "Admin")
-{ 
-    @Html.ActionLink("Driver Search Placholder", "", null, htmlAttributes: new { @class = "btn btn-default", @style = "margin-bottom:20px" })
-    @Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-default", @style = "float:right;margin-bottom:20px" })
+{
+    using (Html.BeginForm())
+    {
+        <h4>Find by City, Assigned Driver Email, House Number and Street:</h4>
+        <p class="form-inline">
+            @Html.TextBox("SearchString", "", new { @class = "form-control" })
+            <input type="submit" value="Search" class="btn btn-default" />
+            @Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-default", @style = "float:right;margin-bottom:20px" })
+        </p>
+    }
 }
 <table class="table">
     <tr>

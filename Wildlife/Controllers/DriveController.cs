@@ -60,7 +60,7 @@ namespace Wildlife.Controllers
 
         [CustomAuthorize(Roles = "Admin")]
         // GET: Drives
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string searchString)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -81,6 +81,38 @@ namespace Wildlife.Controllers
             var drives = await db.Drives.ToListAsync();
             List<DriveInfoViewModel> driveInfoViewModels = new List<DriveInfoViewModel>();
             foreach ( var drive in drives) {
+                if (searchString != null)
+                {
+                    searchString = searchString.ToLower();
+                    // doomed by default, if anything is valid not doomed and we do rest of adding drivemodel
+                    bool doomed = true;
+                    if (drive.DriveName != null && (drive.DriveName.ToLower().Contains(searchString)))
+                    {
+                        doomed = false;
+                    }
+                    if (drive.ExtraDetails != null && (drive.ExtraDetails.ToLower().Contains(searchString))) 
+                    {
+                        doomed = false;
+                    }
+                    if (drive.StartLocation.AddressLine1 != null && (drive.StartLocation.AddressLine1.ToLower().Contains(searchString)))
+                    {
+                        doomed = false;
+                    }
+                    if (drive.EndLocation.AddressLine1 != null && (drive.EndLocation.AddressLine1.ToLower().Contains(searchString)))
+                    {
+                        doomed = false;
+                    }
+                    if (drive.DriverId != null && (UserManager.FindByIdAsync(drive.DriverId).Result.UserName.ToLower().Contains(searchString)))
+                    {
+                        doomed = false;
+                    }
+
+                    if (doomed)
+                    {
+                        continue;
+                    }
+
+                }
                 var driveInfoViewModel = new DriveInfoViewModel
                 {
                     DriveId = drive.DriveId,
