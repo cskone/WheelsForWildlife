@@ -589,6 +589,7 @@ namespace Wildlife.Controllers
 
             var model = new EditAdminUserInfoViewModel
             {
+                IsSuperUser = user.IsSuperUser,
                 OldUserRole = roles[0],
                 OldUserName = user.UserName,
                 OldEmail = user.Email,
