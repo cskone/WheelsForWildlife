@@ -43,12 +43,21 @@
             @Html.ValidationMessageFor(m => m.NewEmail, "", new { @class = "text-danger" })
         </div>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.NewUserRole, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(m => m.NewUserRole, (IEnumerable<SelectListItem>)ViewBag.Name, " ", new { @class = "form-control" })
+
+    if (Model.IsSuperUser == false)
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.NewUserRole, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.NewUserRole, (IEnumerable<SelectListItem>)ViewBag.Name, " ", new { @class = "form-control" })
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div>Cannot change the role of the Super User</div>
+        @Html.HiddenFor(m => m.NewUserRole)
+    }
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Done" class="btn btn-default" />

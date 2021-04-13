@@ -32,9 +32,12 @@ namespace Wildlife
                 roleManager.Create(role);
 
                 var user = new ApplicationUser();
+                user.FirstName = "Super";
+                user.LastName = "User";
                 user.UserName = "Super.User@gmail.com";
                 user.Email = "Super.User@gmail.com";
                 user.DriverLocation = new CivicAddress();
+                user.IsSuperUser = true;
                 string userPWD = "SuperUser1!";
 
                 var chkUser = UserManager.Create(user, userPWD);

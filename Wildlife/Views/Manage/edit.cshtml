@@ -35,6 +35,20 @@
             </div>
         </div>*@
     <div class="form-group">
+        @Html.LabelFor(m => m.NewFirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewFirstName, new { placeholder = @Html.ValueFor(m => m.OldFirstName), @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewFirstName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewLastName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NewLastName, new { placeholder = @Html.ValueFor(m => m.OldLastName), @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.NewLastName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
         @Html.LabelFor(m => m.NewUserName, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.NewUserName, new { placeholder = @Html.ValueFor(m => m.OldUserName), @class = "form-control" })
@@ -267,7 +281,7 @@
                     addTimeSlot(time, value + 12, j);
                 }
             }
-        
+
             var availability = [];
 
         $.ajax({
@@ -378,7 +392,7 @@
                                 // find all cells of given date and times between start and end and change color to show availability
                                 displayAvailabilityBlock(value.id, value.day, value.time.start, value.time.end);
                             });
-                        },   
+                        },
                     });
                    }
                    else {
@@ -396,7 +410,7 @@
                                 time: { start: edit_availability.start, end: edit_availability.end },
                             });
                             cleanupNewAvailability();
-                        },   
+                        },
                     });
                    }
 
