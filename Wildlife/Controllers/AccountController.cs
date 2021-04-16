@@ -79,26 +79,6 @@ namespace Wildlife.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var roleManager = new Microsoft.AspNet.Identity.RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-
-            var result = SignInStatus.Failure;
-            var role = "";
-            var user = await UserManager.FindByEmailAsync(model.Email);
-            if (user != null)
-            {
-                foreach (var x in user.Roles)
-                {
-                    role = roleManager.FindByIdAsync(x.RoleId).Result.Name;
-                }
-            }
-            if (role == "Inactive")
-            {
-                result = SignInStatus.Failure;
-            }
-            else
-            {
-                result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            }
             switch (result)
             {
                 case SignInStatus.Success:
