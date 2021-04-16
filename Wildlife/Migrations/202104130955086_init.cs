@@ -1,9 +1,9 @@
-namespace Wildlife.Migrations
+﻿namespace Wildlife.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class init : DbMigration
     {
         public override void Up()
         {
@@ -35,7 +35,9 @@ namespace Wildlife.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        UserID = c.Int(nullable: false),
+                        IsSuperUser = c.Boolean(nullable: false),
+                        FirstName = c.String(),
+                        LastName = c.String(),
                         VehicleMake = c.String(),
                         VehicleModel = c.String(),
                         DriveCount = c.Int(nullable: false),
@@ -63,6 +65,21 @@ namespace Wildlife.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
+            
+            CreateTable(
+                "dbo.Availability",
+                c => new
+                    {
+                        SlotId = c.Int(nullable: false, identity: true),
+                        DriverId = c.String(nullable: false),
+                        Dayoftheweek = c.Int(nullable: false),
+                        StartTime = c.Double(nullable: false),
+                        EndTime = c.Double(nullable: false),
+                        ApplicationUser_Id = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.SlotId)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
+                .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -103,11 +120,24 @@ namespace Wildlife.Migrations
                         DriverId = c.String(),
                         DriveDistance = c.Decimal(nullable: false, precision: 18, scale: 2),
                         DriveDuration = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        DriveDone = c.Boolean(nullable: false),
                         ApplicationUser_Id = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.DriveId)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
                 .Index(t => t.ApplicationUser_Id);
+            
+            CreateTable(
+                "dbo.OptedInDrivers",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        DriverId = c.String(),
+                        Drive_DriveId = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Drives", t => t.Drive_DriveId)
+                .Index(t => t.Drive_DriveId);
             
             CreateTable(
                 "dbo.AspNetUserLogins",
@@ -128,18 +158,24 @@ namespace Wildlife.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Drives", "ApplicationUser_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.OptedInDrivers", "Drive_DriveId", "dbo.Drives");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Availability", "ApplicationUser_Id", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            DropIndex("dbo.OptedInDrivers", new[] { "Drive_DriveId" });
             DropIndex("dbo.Drives", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.Availability", new[] { "ApplicationUser_Id" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropTable("dbo.AspNetUserLogins");
+            DropTable("dbo.OptedInDrivers");
             DropTable("dbo.Drives");
             DropTable("dbo.AspNetUserClaims");
+            DropTable("dbo.Availability");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");

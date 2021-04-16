@@ -145,6 +145,8 @@ namespace Wildlife.Controllers
             // move entity fields to viewmodel from constructor, automapper, etc.        
             var model = new EditUserInfoViewModel
             {
+                OldFirstName = user.FirstName,
+                OldLastName = user.LastName,
                 OldUserName = user.UserName,
                 OldEmail = user.Email,
                 OldPhoneNumber = user.PhoneNumber,
@@ -152,6 +154,8 @@ namespace Wildlife.Controllers
                 OldVehicleModel = user.VehicleModel,
                 // OldDriverLocation = user.DriverLocation
 
+                NewFirstName = user.FirstName,
+                NewLastName = user.LastName,
                 NewUserName = user.UserName,
                 NewEmail = user.Email,
                 NewPhoneNumber = user.PhoneNumber,
@@ -183,6 +187,8 @@ namespace Wildlife.Controllers
             var user = await UserManager.FindByNameAsync(userEditUserInfoViewModel.OldUserName);
             // Mapper.Map(userUpdateViewModel, user);  // move viewmodel to entity model
             // instead of automapper, you can do this:
+            user.FirstName = userEditUserInfoViewModel.NewFirstName;
+            user.LastName = userEditUserInfoViewModel.NewLastName;
             user.UserName = userEditUserInfoViewModel.NewUserName;
             user.Email = userEditUserInfoViewModel.NewEmail;
             user.PhoneNumber = userEditUserInfoViewModel.NewPhoneNumber;
@@ -514,7 +520,8 @@ namespace Wildlife.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                foreach (var user in users.Where(u => u.UserName.Contains(searchString) || u.PhoneNumber.Contains(searchString)))
+                foreach (var user in users.Where(u => u.FirstName.Contains(searchString) || u.LastName.Contains(searchString)
+                || u.Email.Contains(searchString) || u.PhoneNumber.Contains(searchString)))
                 {
                     var userInfoViewModel = new UserInfoViewModel
                     {
@@ -582,6 +589,7 @@ namespace Wildlife.Controllers
 
             var model = new EditAdminUserInfoViewModel
             {
+                IsSuperUser = user.IsSuperUser,
                 OldUserRole = roles[0],
                 OldUserName = user.UserName,
                 OldEmail = user.Email,

@@ -65,6 +65,13 @@ namespace Wildlife.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
         [Display(Name = "UserRoles")]
         public string UserRoles { get; set; }
 

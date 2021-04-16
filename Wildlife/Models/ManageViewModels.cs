@@ -76,6 +76,8 @@ namespace Wildlife.Models
 
     public class EditAdminUserInfoViewModel
     {
+        public bool IsSuperUser { get; set; }
+
         [Display(Name = "Old User Role")]
         public string OldUserRole { get; set; }
 
@@ -107,6 +109,16 @@ namespace Wildlife.Models
     }
     public class EditUserInfoViewModel
     {
+        [Display(Name = "Old First Name")]
+        public string OldFirstName { get; set; }
+        [Display(Name = "First Name")]
+        public string NewFirstName { get; set; }
+
+        [Display(Name = "Old Last Name")]
+        public string OldLastName { get; set; }
+        [Display(Name = "Last Name")]
+        public string NewLastName { get; set; }
+
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Old Email")]
         public string OldEmail { get; set; }
@@ -230,6 +242,7 @@ namespace Wildlife.Models
         [Display(Name = "State")]
         public string EndStateProvince { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "Drive Details")]
         public string ExtraDetails { get; set; }
 

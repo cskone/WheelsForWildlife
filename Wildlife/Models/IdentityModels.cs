@@ -14,7 +14,10 @@ namespace Wildlife.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public int UserID { get; set; } // this is totally empty atm
+        public bool IsSuperUser { get; set; }
+        
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         
         // redundant can store in base user
         // public string PhoneNumber { get; set; } // Need to figure out how to inherit from Identity table

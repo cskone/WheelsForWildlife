@@ -19,7 +19,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.User.UserName)
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.LastName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.User.Email)
@@ -39,7 +42,10 @@
     {
         <tr style="border-top:2px solid black;">
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
+                @Html.DisplayFor(modelItem => item.User.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.Email)
@@ -49,9 +55,6 @@
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.User.Id })
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.User.Id })
             </td>
             <td>
                 @Html.ActionLink("Edit", "EditAdmin", new { id = item.User.Id })
