@@ -330,7 +330,9 @@ namespace Wildlife.Controllers
                }
                 else
                 {
-                    drive.DriverId = UserManager.FindByName(driveInfoViewModel.SelectedDriver).Id;
+                    var usr = UserManager.FindByName(driveInfoViewModel.SelectedDriver);
+                    drive.DriverId = usr.Id;
+                    await SendEmailAsync(usr, drive);
                 }
             }
             db.Entry(drive).State = EntityState.Modified;
@@ -459,6 +461,32 @@ namespace Wildlife.Controllers
                 });
                 var response = await client.SendEmailAsync(msg);
             }
+        }
+
+        public async Task SendEmailAsync(ApplicationUser user, Drive drive)
+        {
+            var apiKey = "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";
+            var client = new SendGridClient(apiKey);
+            // need to verify this email like noreply@wildlifecenter.org or whatever
+            var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
+            //var plainTextContent = drive.DriveName + " is available now!";
+            //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
+            //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
+
+            //var templateId = { "Sender_Name" :  }
+            var to = new EmailAddress(user.Email, "NameGoesHere");
+            var msg = MailHelper.CreateSingleTemplateEmail(from, to, "d-2e5fce8502b04f44bd0860a0b31050fc", new NotifEmail()
+            {
+                Sender_Name = "Wheels For Wildlife",
+                Sender_Address = "53 Lighthouse Rd Box 551752",
+                Sender_City = "Kapaau",
+                Sender_State = "HI",
+                Sender_Zip = "96755",
+                Text = drive.DriveName + " is available now!",
+                Url = "https://localhost:44361/Drive/Details/" + drive.DriveId,
+                driveName = drive.DriveName
+            });
+            var response = await client.SendEmailAsync(msg);
         }
 
         private class NotifEmail

@@ -250,19 +250,19 @@ namespace Wildlife.Models
         public string DriverId { get; set; }
 
         [Display(Name = "Distance")]
-        [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         public double DriveDistance { get; set; }
 
         [Display(Name = "Duration")]
-        [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         public decimal DriveDuration { get; set; }
 
         [Display(Name = "Distance From You")]
-        [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         public double UserDistance { get; set; }
 
         [Display(Name = "Travel Time to Drive Pickup")]
-        [DisplayFormat(DataFormatString = "{0:f}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         public decimal UserDuration { get; set; }
 
         public bool DriveDone { get; set; }

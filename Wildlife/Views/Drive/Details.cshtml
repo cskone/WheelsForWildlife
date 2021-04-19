@@ -5,244 +5,132 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+@*<h2>Details</h2>*@
 
 <div>
     @if (Model.DriveDone)
     {
-        <h3>Completed Drive</h3>
+        <h2>Completed Drive</h2>
     }
     else if (Model.DriverId != null)
     {
-        <h3>Active Drive</h3>
+        <h2>Active Drive</h2>
     }
     else
     {
-        <h3>Available Drive</h3>
+        <h2>Available Drive</h2>
     }
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DriveName)
-        </dt>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="project-info-box mt-0">
+                    <h5>@Model.DriveName</h5>
+                    <p class="mb-0">@Model.ExtraDetails</p>
+                </div><!-- / project-info-box -->
 
-        <dd>
-            @Html.DisplayFor(model => model.DriveName)
-        </dd>
+                <div class="project-info-box">
+                    <p><b>Starting Address: </b>@Model.StartAddressLine1, @Model.StartCity, @Model.StartPostalCode</p>
+                    <p><b>Ending Address:</b> @Model.EndAddressLine1, @Model.EndCity, @Model.EndPostalCode</p>
+                    <p><b>Distance: </b>@Html.DisplayFor(model => model.DriveDistance) miles</p>
+                    <p><b>Distance: </b>@Html.DisplayFor(model => model.DriveDuration) mins </p>
+                    @if (ViewBag.ShowTimes == true)
+                    {
+                        <p>
+                            <b>
+                                @Html.DisplayNameFor(model => model.UserDistance): 
+                            </b>
+                            @Html.DisplayFor(model => model.UserDistance) miles
+                        </p>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ExtraDetails)
-        </dt>
+                        <p>
+                            <b>
+                                @Html.DisplayNameFor(model => model.UserDuration): 
+                            </b>
 
-        <dd>
-            <pre style="white-space: pre-wrap;">@Model.ExtraDetails </pre>
-        </dd>
+                            
+                            @Html.DisplayFor(model => model.UserDuration) mins
+                        </p>
+                    }
+                </div><!-- / project-info-box -->
+            </div><!-- / column -->
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartAddressLine1)
-        </dt>
+            <div class="col-md-7">
+                <img src="https://via.placeholder.com/400x300/FFB6C1/000000" alt="project-image" class="rounded">
+                <div class="project-info-box">
+                    @if (User.IsInRole("Driver"))
+                    {
+                        if (Model.DriverId == null)
+                        {
 
-        <dd>
-            @Html.DisplayFor(model => model.StartAddressLine1)
-        </dd>
+                            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="form-group">
+                                    <div>
+                                        @if (ViewBag.numDrives == 0 && !ViewBag.alreadyOptedIn)
+                                        {
+                                            <input type="submit" value="Opt-in Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
+                                        }
+                                        else if (ViewBag.alreadyOptedIn)
+                                        {
+                                            <input type="submit" value="You have already opted in!" class="btn btn-default" disabled />
+                                        }
+                                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartAddressLine2)
-        </dt>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else if (Model.DriverId == User.Identity.Name)
+                        {
+                            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                <div class="form-group">
+                                    <div>
+                                        @if (Model.DriveDone == false)
+                                        {
+                                            <input type="submit" value="Complete Drive!" class="btn btn-danger" onclick="return confirm('Are you sure you wish to complete this drive?');" />
+                                        }
+                                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
 
-        <dd>
-            @Html.DisplayFor(model => model.StartAddressLine2)
-        </dd>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Model.DriverId == null)
+                        {
+                            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                //@Html.Label("Opted In Drivers", new { @class = "col-md-2 control-label" })
+                                <div class="form-group">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartCity)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartCity)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StartCountryRegion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartCountryRegion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StartPostalCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartPostalCode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StartStateProvince)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartStateProvince)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndAddressLine1)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndAddressLine1)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndAddressLine2)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndAddressLine2)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndCity)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndCity)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndCountryRegion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndCountryRegion)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndPostalCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndPostalCode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EndStateProvince)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EndStateProvince)
-        </dd>
-        @if (User.IsInRole("Admin"))
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.DriverId)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.DriverId)
-            </dd>
-        }
-        <dt>
-            @Html.DisplayNameFor(model => model.DriveDistance)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DriveDistance) miles
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DriveDuration)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DriveDuration) mins
-        </dd>
-        @if (ViewBag.ShowTimes == true)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.UserDistance)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.UserDistance) miles
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.UserDuration)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.UserDuration) mins
-            </dd>
-        }
-
-    </dl>
+                                    @Html.ListBoxFor(m => m.SelectedDriver, Model.OptedInDrivers, new { @class = "form-control", aria_label = "Default select example" })
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="submit" value="Accept Driver!" class="btn btn-warning" onclick="return confirm('Are you sure you wish to assign this driver?');" />
+                                    </div>
+                                    <br />
+                                    @Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
+                                    @*@Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })*@
+                                </div>
+                            }
+                        }
+                        @*@Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
+                        <br />
+                        <br />
+                        @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })*@
+                    }
+                </div><!-- / project-info-box -->
+            </div><!-- / column -->
+        </div>
+    </div>
 </div>
 <p>
-    @if (User.IsInRole("Driver"))
-    {
-        if (Model.DriverId == null)
-        {
-
-            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                <div class="form-group">
-                    <div>
-                        @if (ViewBag.numDrives == 0 && !ViewBag.alreadyOptedIn)
-                        {
-                            <input type="submit" value="Opt-in Drive!" class="btn btn-default" onclick="return confirm('Are you sure you wish to accept this drive?');" />
-                        }
-                        else if (ViewBag.alreadyOptedIn)
-                        {
-                            <input type="submit" value="You have already opted in!" class="btn btn-default" disabled />
-                        }
-                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
-
-                    </div>
-                </div>
-            }
-        }
-        else if (Model.DriverId == User.Identity.Name)
-        {
-            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                <div class="form-group">
-                    <div>
-                        @if (Model.DriveDone == false)
-                        {
-                            <input type="submit" value="Complete Drive!" class="btn btn-danger" onclick="return confirm('Are you sure you wish to complete this drive?');" />
-                        }
-                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-primary" })
-
-                    </div>
-                </div>
-            }
-        }
-    }
-    else
-    {
-        if (Model.DriverId == null)
-        {
-            using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-            @Html.Label("Opted In Drivers", new { @class = "col-md-2 control-label" })
-            <div class="form-group">
-
-                @Html.ListBoxFor(m => m.SelectedDriver, Model.OptedInDrivers, new { @class = "form-control", aria_label = "Default select example" })
-            </div>
-            <div class="form-group">
-                <div>
-                    <input type="submit" value="Accept Driver!" class="btn btn-warning" onclick="return confirm('Are you sure you wish to assign this driver?');" />
-                </div>
-            </div>
-            }
-        }
-        @Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
-        <br />
-        <br />
-        @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })
-    }
 </p>
 <p>
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.DriveId }) |*@
