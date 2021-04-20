@@ -475,14 +475,14 @@ namespace Wildlife.Controllers
 
             //var templateId = { "Sender_Name" :  }
             var to = new EmailAddress(user.Email, "NameGoesHere");
-            var msg = MailHelper.CreateSingleTemplateEmail(from, to, "d-2e5fce8502b04f44bd0860a0b31050fc", new NotifEmail()
+            var msg = MailHelper.CreateSingleTemplateEmail(from, to, "d-09e2c185cb834683a0ac012631192bd2", new NotifEmail()
             {
                 Sender_Name = "Wheels For Wildlife",
                 Sender_Address = "53 Lighthouse Rd Box 551752",
                 Sender_City = "Kapaau",
                 Sender_State = "HI",
                 Sender_Zip = "96755",
-                Text = drive.DriveName + " is available now!",
+                Text = drive.DriveName + " has been assigned to you!",
                 Url = "https://localhost:44361/Drive/Details/" + drive.DriveId,
                 driveName = drive.DriveName
             });
