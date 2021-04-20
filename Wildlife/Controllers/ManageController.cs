@@ -627,6 +627,32 @@ namespace Wildlife.Controllers
 
             return RedirectToAction("UserManagement", "Manage", new { Message = "Updated!" });
         }
+        // GET: Manage/Delete/5
+        [CustomAuthorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
+        }
+
+        // POST: Manage/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(string id)
+        {
+            var user = await UserManager.FindByIdAsync(id);
+            db.Users.Remove(user);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
         #region Helpers
         // Used for XSRF protection when adding external logins

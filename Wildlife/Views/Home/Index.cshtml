@@ -47,44 +47,45 @@
         <div class="card-columns">
             @foreach (var item in Model)
             {
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.DriveName)</h5>
-                        <p class="card-text">@Html.DisplayFor(modelItem => item.ExtraDetails)</p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                Pickup: @Html.DisplayFor(modelItem => item.StartAddressLine1), @Html.DisplayFor(modelItem => item.StartCity)
-                            </small>
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                Dropoff: @Html.DisplayFor(modelItem => item.EndAddressLine1), @Html.DisplayFor(modelItem => item.EndCity)
-                            </small>
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                Distance: @Html.DisplayFor(modelItem => item.DriveDistance) miles
-                            </small>
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                Travel Time: @Html.DisplayFor(modelItem => item.DriveDuration) mins
-                            </small>
-                        </p>
-                        @if (ViewBag.displayMenu == "Admin")
-                        {
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
-                                @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
-                                @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
-                            </td>
-                        }
-                        else
-                        {
-                            <td>@Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })</td>
-                        }
-                    </div>
+            <div class="card text-center fa-border">
+                <div class="card-body">
+                    <h5 class="card-title bg-primary">@Html.DisplayFor(modelItem => item.DriveName)</h5>
+                    <p class="card-text text-muted">Driver: @Html.DisplayFor(modelItem => item.DriverId)</p>
+                    <p class="card-text">@Html.DisplayFor(modelItem => item.ExtraDetails)</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Pickup: @Html.DisplayFor(modelItem => item.StartAddressLine1), @Html.DisplayFor(modelItem => item.StartCity)
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Dropoff: @Html.DisplayFor(modelItem => item.EndAddressLine1), @Html.DisplayFor(modelItem => item.EndCity)
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Distance: @Html.DisplayFor(modelItem => item.DriveDistance) miles
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Travel Time: @Html.DisplayFor(modelItem => item.DriveDuration) mins
+                        </small>
+                    </p>
+                    @if (ViewBag.displayMenu == "Admin")
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
+                            @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
+                            @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
+                        </td>
+                    }
+                    else
+                    {
+                        <td>@Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })</td>
+                    }
                 </div>
+            </div>
             }
         </div>
 

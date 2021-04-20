@@ -21,9 +21,10 @@
 <div class="card-columns">
     @foreach (var item in Model)
     {
-        <div class="card text-center">
+        <div class="card text-center fa-border">
             <div class="card-body">
-                <h5 class="card-title">@Html.DisplayFor(modelItem => item.DriveName)</h5>
+                <h5 class="card-title bg-primary">@Html.DisplayFor(modelItem => item.DriveName)</h5>
+                <p class="card-text text-muted">Driver: @Html.DisplayFor(modelItem => item.DriverId)</p>
                 <p class="card-text">@Html.DisplayFor(modelItem => item.ExtraDetails)</p>
                 <p class="card-text">
                     <small class="text-muted">
