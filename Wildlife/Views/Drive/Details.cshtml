@@ -29,7 +29,6 @@
                     <h5>@Model.DriveName</h5>
                     <p class="mb-0">@Model.ExtraDetails</p>
                 </div><!-- / project-info-box -->
-
                 <div class="project-info-box">
                     <p><b>Starting Address: </b>@Model.StartAddressLine1, @Model.StartCity, @Model.StartPostalCode</p>
                     <p><b>Ending Address:</b> @Model.EndAddressLine1, @Model.EndCity, @Model.EndPostalCode</p>
@@ -105,6 +104,7 @@
                         {
                             using (Html.BeginForm("Details", "Drive", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                             {
+
                                 //@Html.Label("Opted In Drivers", new { @class = "col-md-2 control-label" })
                                 <div class="form-group">
 
@@ -121,9 +121,9 @@
                             }
                         }
                         @*@Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
-                <br />
-                <br />
-                @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })*@
+            <br />
+            <br />
+            @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })*@
                     }
                 </div><!-- / project-info-box -->
             </div><!-- / column -->

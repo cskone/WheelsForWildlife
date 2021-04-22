@@ -380,7 +380,17 @@ namespace Wildlife.Controllers
                 {
                     var usr = UserManager.FindByName(driveInfoViewModel.SelectedDriver);
                     drive.DriverId = usr.Id;
-                    await SendEmailAsync(usr, drive);
+                    await SendAcceptedEmailAsync(usr, drive);
+                    List<ApplicationUser> usrs = new List<ApplicationUser>();
+                    foreach(var d in drive.OptedInDrivers)
+                    {
+                        if(d.DriverId != usr.Id)
+                        {
+                            usrs.Add(UserManager.FindByNameAsync(d.DriverId).Result);
+                        }
+                    }
+                    await SendDeclinedEmailAsync(usrs, drive);
+                    
                 }
             }
             db.Entry(drive).State = EntityState.Modified;
@@ -504,14 +514,14 @@ namespace Wildlife.Controllers
                     Sender_State = "HI",
                     Sender_Zip = "96755",
                     Text = drive.DriveName + " is available now!",
-                    Url = "https://localhost:44361/Drive/Details/" + drive.DriveId,
+                    Url = Request.Url.Host + "/Drive/Details/" + drive.DriveId,
                     driveName = drive.DriveName
                 });
                 var response = await client.SendEmailAsync(msg);
             }
         }
 
-        public async Task SendEmailAsync(ApplicationUser user, Drive drive)
+        public async Task SendAcceptedEmailAsync(ApplicationUser user, Drive drive)
         {
             var apiKey = "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";
             var client = new SendGridClient(apiKey);
@@ -531,10 +541,40 @@ namespace Wildlife.Controllers
                 Sender_State = "HI",
                 Sender_Zip = "96755",
                 Text = drive.DriveName + " has been assigned to you!",
-                Url = "https://localhost:44361/Drive/Details/" + drive.DriveId,
+                Url = Request.Url.Host + "/Drive/Details/" + drive.DriveId,
                 driveName = drive.DriveName
             });
             var response = await client.SendEmailAsync(msg);
+        }
+
+
+        public async Task SendDeclinedEmailAsync(List<ApplicationUser> users, Drive drive)
+        {
+            var apiKey = "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";
+            var client = new SendGridClient(apiKey);
+            // need to verify this email like noreply@wildlifecenter.org or whatever
+            var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
+            //var plainTextContent = drive.DriveName + " is available now!";
+            //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
+            //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
+
+            //var templateId = { "Sender_Name" :  }
+            foreach (var x in users)
+            {
+                var to = new EmailAddress(x.Email, "NameGoesHere");
+                var msg = MailHelper.CreateSingleTemplateEmail(from, to, "d-3c0d297c5e824b9dae025bde04cd0e0f", new NotifEmail()
+                {
+                    Sender_Name = "Wheels For Wildlife",
+                    Sender_Address = "53 Lighthouse Rd Box 551752",
+                    Sender_City = "Kapaau",
+                    Sender_State = "HI",
+                    Sender_Zip = "96755",
+                    Text = drive.DriveName + " has been taken! Thank you for opting in!",
+                    Url = Request.Url.Host + "/Drive/Details/" + drive.DriveId,
+                    //driveName = drive.DriveName
+                });
+                var response = await client.SendEmailAsync(msg);
+            }
         }
 
         private class NotifEmail
@@ -586,6 +626,7 @@ namespace Wildlife.Controllers
                 DriveName = drive.DriveName,
                 ExtraDetails = drive.ExtraDetails,
                 DriverId = drive.DriverId,
+                SelectedDriver = drive.DriverId,
 
                 StartAddressLine1 = drive.StartLocation.AddressLine1,
                 StartAddressLine2 = drive.StartLocation.AddressLine2,
@@ -616,6 +657,7 @@ namespace Wildlife.Controllers
             return View(driveInfoViewModel);
         }
 
+        // this is mixing viewmodels which is scuffed af
         // POST: Drives/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
