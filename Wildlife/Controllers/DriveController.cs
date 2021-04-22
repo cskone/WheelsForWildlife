@@ -176,7 +176,7 @@ namespace Wildlife.Controllers
                 DriveDone = drive.DriveDone,
                 OptedInDrivers = new SelectList(drive.OptedInDrivers, "DriverId", "DriverId"),
                 SelectedDriver = null,
-
+                
                 StartAddressLine1 = drive.StartLocation.AddressLine1,
                 StartAddressLine2 = drive.StartLocation.AddressLine2,
                 StartCity = drive.StartLocation.City,
@@ -197,10 +197,15 @@ namespace Wildlife.Controllers
             if (User.IsInRole("Driver") && user.DriverLocation.AddressLine1 != null && user.Availabilities.Count() >= 1){
                 ViewBag.ShowTimes = true;
                 Tuple<int, int> driveDetails = CalcDriveDistDurFromUser(user, drive);
+                Tuple<decimal, decimal> driveLatLong = CalcLatLong(drive.StartLocation);
                 int userDistance = driveDetails.Item2;
                 int userDuration = driveDetails.Item1;
                 driveInfoViewModel.UserDistance = userDistance * 0.000621371192;
                 driveInfoViewModel.UserDuration = userDuration / 60;
+                var Latitude = driveLatLong.Item1;
+                var Longitude = driveLatLong.Item2;
+                driveInfoViewModel.ImgSrc = "https://maps.googleapis.com/maps/api/staticmap?center=" + Latitude + "," + Longitude + "&map_ids=2da114a87f17f28e&pois=" + Latitude + "," + Longitude + ",0,0&zoom=15&size=900x1200&maptype=roadmap&markers=color:blue%7Clabel:Drive%7C" + Latitude + "," + Longitude + "&key=AIzaSyDzPyQYwjpO2jBbkWJmYMJPNQI3YUiIda0";
+
             }
             else
             {
@@ -228,6 +233,49 @@ namespace Wildlife.Controllers
                 ViewBag.alreadyOptedIn = false;
             }
             return View(driveInfoViewModel);
+        }
+
+        public Tuple<decimal, decimal> CalcLatLong( CivicAddress start)
+        {
+            try
+            {
+                string keyString = ConfigurationManager.AppSettings["keyString"].ToString(); // passing API key
+                string ApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+                string addressString = start.AddressLine1 + "+" + start.City + "+HI";
+                ApiUrl += addressString + "&key=" + keyString;
+                WebRequest request = WebRequest.Create(ApiUrl);
+                request.Method = "POST";
+                string postData = "This is a test that posts this string to a Web server.";
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+                WebResponse response = request.GetResponse();
+                dataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                string resp = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                JObject values = JObject.Parse(resp);
+                if (!((string)values["results"][0]["status"] == "ZERO_RESULTS" || (string)values["results"][0]["status"] == "NOT_FOUND"))
+                {
+                    var lat = (string)values["results"][0]["geometry"]["location"]["lat"];
+                    var lng = (string)values["results"][0]["geometry"]["location"]["lng"];
+                    return Tuple.Create(Decimal.Parse(lat), Decimal.Parse(lng));
+                    //return Tuple.Create(values[], values[1]);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return Tuple.Create(-1.0m, -1.0m);
+
         }
 
         // need to make this database relation to user and drive id so it doenst recalc fourteen thousand times

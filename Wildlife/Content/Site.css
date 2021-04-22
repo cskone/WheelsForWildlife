@@ -307,7 +307,7 @@ body {
 
 img {
     width: 100%;
-    max-width: 100%;
+    max-width: 800px;
     height: auto;
     -webkit-backface-visibility: hidden;
 }

@@ -57,7 +57,7 @@
             </div><!-- / column -->
 
             <div class="col-md-7">
-                <img src="https://via.placeholder.com/400x300/FFB6C1/000000" alt="project-image" class="rounded">
+                <img src="@Model.ImgSrc" alt="project-image" class="rounded">
                 <div class="project-info-box">
                     @if (User.IsInRole("Driver"))
                     {
@@ -121,9 +121,9 @@
                             }
                         }
                         @*@Html.ActionLink("Back to User Drive List", "Index", "Home", null, new { @class = "btn btn-primary" })
-                        <br />
-                        <br />
-                        @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })*@
+                <br />
+                <br />
+                @Html.ActionLink("Back to Admin Drive List", "Index", null, new { @class = "btn btn-primary" })*@
                     }
                 </div><!-- / project-info-box -->
             </div><!-- / column -->

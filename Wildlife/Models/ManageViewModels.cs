@@ -265,6 +265,8 @@ namespace Wildlife.Models
         [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         public decimal UserDuration { get; set; }
 
+        public string ImgSrc { get; set; }
+
         public bool DriveDone { get; set; }
         public System.Web.Mvc.SelectList OptedInDrivers { get; set; }
 
