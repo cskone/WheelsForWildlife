@@ -384,7 +384,7 @@ namespace Wildlife.Controllers
                     List<ApplicationUser> usrs = new List<ApplicationUser>();
                     foreach(var d in drive.OptedInDrivers)
                     {
-                        if(d.DriverId != usr.Id)
+                        if(d.DriverId != usr.UserName)
                         {
                             usrs.Add(UserManager.FindByNameAsync(d.DriverId).Result);
                         }
@@ -514,7 +514,7 @@ namespace Wildlife.Controllers
                     Sender_State = "HI",
                     Sender_Zip = "96755",
                     Text = drive.DriveName + " is available now!",
-                    Url = Request.Url.Host + "/Drive/Details/" + drive.DriveId,
+                    Url = Request.Url.ToString(),
                     driveName = drive.DriveName
                 });
                 var response = await client.SendEmailAsync(msg);
@@ -541,7 +541,7 @@ namespace Wildlife.Controllers
                 Sender_State = "HI",
                 Sender_Zip = "96755",
                 Text = drive.DriveName + " has been assigned to you!",
-                Url = Request.Url.Host + "/Drive/Details/" + drive.DriveId,
+                Url = Request.Url.ToString(),
                 driveName = drive.DriveName
             });
             var response = await client.SendEmailAsync(msg);
@@ -570,7 +570,7 @@ namespace Wildlife.Controllers
                     Sender_State = "HI",
                     Sender_Zip = "96755",
                     Text = drive.DriveName + " has been taken! Thank you for opting in!",
-                    Url = Request.Url.Host + "/Drive/Details/" + drive.DriveId,
+                    Url = Request.Url.ToString(),
                     //driveName = drive.DriveName
                 });
                 var response = await client.SendEmailAsync(msg);
