@@ -186,6 +186,10 @@ namespace Wildlife.Models
     {
         [Required]
         public int DriveId { get; set; }
+
+        [Display(Name = "Driver")]
+        public string DriverInfo { get; set; }
+
         [Required]
         [Display(Name = "Drive Title")]
         public string DriveName { get; set; }

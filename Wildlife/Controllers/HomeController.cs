@@ -83,10 +83,12 @@ namespace Wildlife.Controllers
                             if (usr != null)
                             {
                                 driveInfoViewModel.DriverId = usr.UserName;
+                                driveInfoViewModel.DriverInfo = usr.FirstName + " " + usr.LastName + " | " + usr.Email + " | " + usr.PhoneNumber;
                             }
                             else
                             {
                                 driveInfoViewModel.DriverId = null;
+                                driveInfoViewModel.DriverInfo = null;
                             }
 
                             driveInfoViewModels.Add(driveInfoViewModel);

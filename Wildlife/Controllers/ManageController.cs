@@ -627,7 +627,7 @@ namespace Wildlife.Controllers
 
             return RedirectToAction("UserManagement", "Manage", new { Message = "Updated!" });
         }
-        // GET: Manage/Delete/5
+        // GET: Manage/Delete
         [CustomAuthorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string id)
         {
@@ -642,16 +642,14 @@ namespace Wildlife.Controllers
             }
             return View(user);
         }
-
-        // POST: Manage/Delete/5
+        // POST: Manage/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
             var user = await UserManager.FindByIdAsync(id);
-            db.Users.Remove(user);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            await UserManager.DeleteAsync(user);
+            return RedirectToAction("UserManagement");
         }
 
         #region Helpers

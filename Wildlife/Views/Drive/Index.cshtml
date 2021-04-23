@@ -18,42 +18,6 @@
         </p>
     }
 }
-<div class="card-columns">
-    @foreach (var item in Model)
-    {
-        <div class="card text-center fa-border">
-            <div class="card-body">
-                <h5 class="card-title bg-primary">@Html.DisplayFor(modelItem => item.DriveName)</h5>
-                <p class="card-text text-muted">Driver: @Html.DisplayFor(modelItem => item.DriverId)</p>
-                <p class="card-text">@Html.DisplayFor(modelItem => item.ExtraDetails)</p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Pickup: @Html.DisplayFor(modelItem => item.StartAddressLine1), @Html.DisplayFor(modelItem => item.StartCity)
-                    </small>
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Dropoff: @Html.DisplayFor(modelItem => item.EndAddressLine1), @Html.DisplayFor(modelItem => item.EndCity)
-                    </small>
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Distance: @Html.DisplayFor(modelItem => item.DriveDistance) miles
-                    </small>
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">
-                        Travel Time: @Html.DisplayFor(modelItem => item.DriveDuration) mins
-                    </small>
-                </p>
-                @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
-                @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
-                @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
-            </div>
-        </div>
-    }
-</div>
-@*
 <table class="table">
     <tr>
         <th>
@@ -63,7 +27,7 @@
             @Html.DisplayNameFor(model => model.ExtraDetails)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DriverId)
+            @Html.DisplayNameFor(model => model.DriverInfo)
         </th>
         <th></th>
     </tr>
@@ -74,12 +38,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DriveName)
             </td>
-            <td  style="max-width:;overflow:auto;">
+            <td style="max-width:350px;overflow:auto;">
                 <pre style="white-space: pre-wrap;">@item.ExtraDetails </pre>
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.DriverId)
+                @Html.DisplayFor(modelItem => item.DriverInfo)
             </td>
             @if (ViewBag.displayMenu == "Admin")
             {
@@ -101,7 +65,7 @@
                 @Html.DisplayFor(modelItem => item.StartCity)
                 @*<h1 style="padding:0px;margin:0;display:inline-block;margin-block-start:0;margin-block-end:0;">
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&rArr;
-                    </h1>
+                    </h1>*@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndAddressLine1)
@@ -117,4 +81,3 @@
     }
 
 </table>
-*@
