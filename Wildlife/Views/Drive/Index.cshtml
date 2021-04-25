@@ -47,11 +47,11 @@
             </td>
             @if (ViewBag.displayMenu == "Admin")
             {
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.DriveId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.DriveId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.DriveId })
-                </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
+            @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
+            @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
+        </td>
             }
             else
             {
