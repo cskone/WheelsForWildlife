@@ -226,7 +226,7 @@ textarea {
 
 .descript {
     text-align: center;
-    font: 18px arial;
+    font: 16px arial;
 }
 
 .ital {
@@ -241,6 +241,7 @@ textarea {
 }
 
 .pp {
+    text-align: left;
     font: 18px arial;
     line-height: 1.5;
 }
