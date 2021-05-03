@@ -668,3 +668,16 @@ p {
 b, strong {
     font-weight: 700 !important;
 }
+
+
+.panel {
+    max-width: 60%;
+}
+
+.panel-collapse {
+    margin-top: 10px;
+}
+
+.text-muted {
+    font-size:14px;
+}

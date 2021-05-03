@@ -44,74 +44,58 @@
             activeclass = "btn btn-default";
         }
         @Html.ActionLink("Show Only Completed Drives", "Index", routeValues: new { showcompleted = !ViewBag.showcompleted }, htmlAttributes: new { @class = activeclass })
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.DriveName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ExtraDetails)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DriverId)
-                </th>
-                <th></th>
-            </tr>
 
+        <hr />
+        <div class="text-center">
             @foreach (var item in Model)
             {
-                <tr style="border-top:2px solid black;">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DriveName)
-                    </td>
-                    <td style="max-width:350px;overflow:auto;">
-                        <pre style="white-space: pre-wrap;">@item.ExtraDetails </pre>
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DriverId)
-                    </td>
-                    @if (ViewBag.displayMenu == "Admin")
-                    {
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
-                            @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" }) |
-                            @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-danger btn-sm" })
-                        </td>
-                    }
-                    else
-                    {
-                        <td>@Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })</td>
-                    }
-
-                </tr>
-                <tr style="border-bottom:2px solid black;display:contents;width:100%">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartAddressLine1),
-                        @Html.DisplayFor(modelItem => item.StartCity)
-                        @*<h1 style="padding:0px;margin:0;display:inline-block;margin-block-start:0;margin-block-end:0;">
-                                &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&rArr;
-                            </h1>*@
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndAddressLine1)
-                        @Html.DisplayFor(modelItem => item.EndCity)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DriveDistance) miles
-                        @Html.DisplayFor(modelItem => item.DriveDuration) mins
-                    </td>
-                </tr>
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h5 class="panel-title">@Html.DisplayFor(modelItem => item.DriveName)</h5></div>
+                    <div class="panel-body">
+                        @if (!item.DriverId.IsEmpty())
+                        {<p class="text-muted">You are Assigned to this drive!</p>}
+                        <p class="text-muted">@Html.DisplayFor(modelItem => item.ExtraDetails)</p>
+                        <p>
+                            <small class="text-muted">
+                                Pickup: @Html.DisplayFor(modelItem => item.StartAddressLine1), @Html.DisplayFor(modelItem => item.StartCity)
+                            </small>
+                        </p>
+                        <p>
+                            <small class="text-muted">
+                                Dropoff: @Html.DisplayFor(modelItem => item.EndAddressLine1), @Html.DisplayFor(modelItem => item.EndCity)
+                            </small>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Distance: @Html.DisplayFor(modelItem => item.DriveDistance) miles
+                            </small>
+                        </p>
+                        <p>
+                            <small class="text-muted">
+                                Travel Time: @Html.DisplayFor(modelItem => item.DriveDuration) mins
+                            </small>
+                        </p>
+                        @if (ViewBag.displayMenu == "Admin")
+                        {
+                            @Html.ActionLink("Edit", "Edit", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm mr-1" })
+                            <text>&nbsp;</text>
+                            @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm mr-1" })
+                            <text>&nbsp;</text>
+                            @Html.ActionLink("Delete", "Delete", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-danger btn-sm mr-1" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Details", "Details", "drive", new { id = item.DriveId }, htmlAttributes: new { @class = "btn btn-primary btn-sm" })
+                        }
+                    </div>
+                </div>
             }
-
-        </table>
+        </div>
     }
     else
     {
         <h2 style="padding:25px" ;>
-            **You have not set up your account properly! @Html.ActionLink("Update User Info", "Edit", "Manage")**
+            You have not set up your account properly! @Html.ActionLink("Update User Info", "Edit", "Manage")
         </h2>
     }
 
@@ -158,12 +142,12 @@ else
         </p>
     </div>
 
-    <div style="padding: 50px; text-align:center">
-        <img src="~/Images/bird.jpg" alt="Bird" style="width: 225px; height:184px">
-        <img src="~/Images/dancing.jpg" alt="People Dancing" style="width: 225px; height:184px">
-        <img src="~/Images/logoandbirds.jpg" alt="Logo with Birds" style="height: 184px">
-        <img src="~/Images/volunteers.jpg" alt="Volunteers" style="width: 225px; height:184px">
-        <img src="~/Images/walkingbird.jpg" alt="Walking Bird" style="height: 184px"
+    <div style="margin-top:50px">
+        <img src="~/Images/bird.jpg" alt="Bird" style="width: 190px; height:184px" />
+        <img src="~/Images/dancing.jpg" alt="People Dancing" style="width: 190px; height:184px" />
+        <img src="~/Images/logoandbirds.jpg" alt="Logo with Birds" style="width: 190px; height: 184px" />
+        <img src="~/Images/volunteers.jpg" alt="Volunteers" style="width: 190px; height:184px" />
+        <img src="~/Images/walkingbird.jpg" alt="Walking Bird" style="width: 190px; height: 184px" />
     </div>
 
 

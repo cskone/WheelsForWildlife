@@ -56,7 +56,7 @@
             </div><!-- / column -->
 
             <div class="col-md-7">
-                <img src="@Model.ImgSrc" alt="project-image" class="rounded">
+                @if (User.IsInRole("Driver")) { <img src="@Model.ImgSrc" alt="project-image" class="rounded"> }
                 <div class="project-info-box">
                     @if (User.IsInRole("Driver"))
                     {

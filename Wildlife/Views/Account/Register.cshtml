@@ -44,9 +44,9 @@
 
 @*Tutorial used for role creation https://www.c-sharpcorner.com/UploadFile/asmabegam/Asp-Net-mvc-5-security-and-creating-user-role/*@
 <div class="form-group">
-    @Html.Label("user Role", new { @class = "col-md-2 control-label" })
+    @Html.Label("User Role", new { @class = "col-md-2 control-label" })
     <div class="col-md-10">
-        @Html.DropDownList("UserRoles", (SelectList)ViewBag.Name, " ")
+        @Html.DropDownList("UserRoles", (SelectList)ViewBag.Name, " ", new { @class = "form-control" })
     </div>
 </div>
 

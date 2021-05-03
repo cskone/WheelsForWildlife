@@ -495,17 +495,17 @@ namespace Wildlife.Controllers
 
         public async Task SendEmailAsync(List<ApplicationUser> users, Drive drive)
         {
-            var apiKey = "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";
+            string apiKey = ConfigurationManager.AppSettings["emailApiKey"].ToString();
             var client = new SendGridClient(apiKey);
             // need to verify this email like noreply@wildlifecenter.org or whatever
-            var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
+            var from = new EmailAddress(ConfigurationManager.AppSettings["email"].ToString(), "Wheels for Wildlife");
             //var plainTextContent = drive.DriveName + " is available now!";
             //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
             //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
 
             //var templateId = { "Sender_Name" :  }
             foreach (var x in users) {
-                var to = new EmailAddress(x.Email, "NameGoesHere");
+                var to = new EmailAddress(x.Email, "");
                 var msg = MailHelper.CreateSingleTemplateEmail(from, to, "d-2e5fce8502b04f44bd0860a0b31050fc", new NotifEmail()
                 {
                     Sender_Name = "Wheels For Wildlife",
@@ -523,10 +523,10 @@ namespace Wildlife.Controllers
 
         public async Task SendAcceptedEmailAsync(ApplicationUser user, Drive drive)
         {
-            var apiKey = "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";
+            string apiKey = ConfigurationManager.AppSettings["emailApiKey"].ToString();
             var client = new SendGridClient(apiKey);
             // need to verify this email like noreply@wildlifecenter.org or whatever
-            var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
+            var from = new EmailAddress(ConfigurationManager.AppSettings["email"].ToString(), "Wheels for Wildlife");
             //var plainTextContent = drive.DriveName + " is available now!";
             //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
             //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
@@ -550,10 +550,10 @@ namespace Wildlife.Controllers
 
         public async Task SendDeclinedEmailAsync(List<ApplicationUser> users, Drive drive)
         {
-            var apiKey = "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";
+            string apiKey = ConfigurationManager.AppSettings["emailApiKey"].ToString();
             var client = new SendGridClient(apiKey);
             // need to verify this email like noreply@wildlifecenter.org or whatever
-            var from = new EmailAddress("itshawk@gnode.org", "Wheels for Wildlife");
+            var from = new EmailAddress(ConfigurationManager.AppSettings["email"].ToString(), "Wheels for Wildlife");
             //var plainTextContent = drive.DriveName + " is available now!";
             //var htmlContent = "<a href=https://localhost:44361/Drive/Details/" + drive.DriveId + ">" +
             //    "<strong>" + drive.DriveName + " is available now! Click Here To Go To The Drive!</a></strong>";
