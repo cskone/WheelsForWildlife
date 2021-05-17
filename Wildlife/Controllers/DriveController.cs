@@ -475,8 +475,8 @@ namespace Wildlife.Controllers
         // half broken i dunno, also kinda expensive, and needs to verify phone number to be countrycode + phonenumber
         public void SendTextMsg(List<ApplicationUser> users)
         {
-            string AccountSid = "ACc2b05b3b84b6739a3a2ef068c21352e1";
-            string AuthToken = "bc1428ec7c9aba9ff97476ff9a15d270";
+            string AccountSid = "twilioaccountsid";
+            string AuthToken = "twilioauthtoken";
 
             TwilioClient.Init(AccountSid, AuthToken);
 
@@ -484,7 +484,7 @@ namespace Wildlife.Controllers
             {
                 var message = MessageResource.Create(
                 body: "Hi there!",
-                from: new Twilio.Types.PhoneNumber("+17164188033"),
+                from: new Twilio.Types.PhoneNumber("twiliophonenumber"),
                 to: new Twilio.Types.PhoneNumber(x.PhoneNumber)
                 );
 
